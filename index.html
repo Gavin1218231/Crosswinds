@@ -1196,9 +1196,417 @@
         }
 
         .card { animation: fadeIn 0.3s ease; }
+
+        /* ===== LOGIN / SIGNUP SCREEN ===== */
+        .auth-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            background: var(--sky-dark);
+            display: flex; align-items: center; justify-content: center;
+            overflow-y: auto;
+        }
+
+        .auth-screen.hidden { display: none; }
+
+        .auth-bg {
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(0,180,216,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(247,127,0,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(6,214,160,0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .auth-container {
+            position: relative;
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+            z-index: 1;
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .auth-logo svg { width: 56px; height: 56px; color: var(--accent); margin-bottom: 12px; }
+
+        .auth-logo h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .auth-logo p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-top: 6px;
+        }
+
+        .auth-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 32px;
+            backdrop-filter: blur(12px);
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 28px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            background: none; border: none;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .auth-tab:hover { color: var(--text-secondary); }
+        .auth-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+        .auth-form { display: none; }
+        .auth-form.active { display: block; }
+
+        .auth-form .form-group { margin-bottom: 18px; }
+
+        .auth-form .form-label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .auth-form .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .auth-form .form-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-dim);
+        }
+
+        .auth-form .form-input::placeholder { color: var(--text-muted); }
+
+        .auth-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        .auth-btn {
+            width: 100%;
+            padding: 13px;
+            border-radius: var(--radius-sm);
+            border: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 4px;
+        }
+
+        .auth-btn-primary {
+            background: var(--accent);
+            color: var(--sky-dark);
+        }
+
+        .auth-btn-primary:hover { background: var(--accent-glow); }
+
+        .auth-divider {
+            display: flex; align-items: center; gap: 16px;
+            margin: 22px 0;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .auth-divider::before, .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--card-border);
+        }
+
+        .auth-social {
+            display: flex; gap: 12px;
+        }
+
+        .auth-social-btn {
+            flex: 1;
+            padding: 11px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--card-border);
+            background: var(--input-bg);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: var(--transition);
+        }
+
+        .auth-social-btn:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+            background: var(--accent-dim);
+        }
+
+        .auth-social-btn svg { width: 18px; height: 18px; }
+
+        .auth-forgot {
+            text-align: right;
+            margin-top: -10px;
+            margin-bottom: 18px;
+        }
+
+        .auth-forgot a {
+            color: var(--accent);
+            font-size: 0.82rem;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .auth-forgot a:hover { text-decoration: underline; }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .auth-footer a {
+            color: var(--accent);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .auth-footer a:hover { text-decoration: underline; }
+
+        .auth-checkbox {
+            display: flex; align-items: flex-start; gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .auth-checkbox input[type="checkbox"] {
+            margin-top: 2px;
+            accent-color: var(--accent);
+            width: 16px; height: 16px;
+            cursor: pointer;
+        }
+
+        .auth-checkbox label {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .auth-checkbox label a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .auth-error {
+            background: rgba(230,57,70,0.1);
+            border: 1px solid rgba(230,57,70,0.3);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            font-size: 0.83rem;
+            color: var(--danger);
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .auth-error.show { display: block; }
+
+        .pilot-type-select {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .pilot-type-option {
+            padding: 14px 12px;
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-sm);
+            background: var(--input-bg);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .pilot-type-option:hover { border-color: var(--accent); }
+        .pilot-type-option.selected {
+            border-color: var(--accent);
+            background: var(--accent-dim);
+        }
+
+        .pilot-type-option svg {
+            display: block;
+            margin: 0 auto 6px;
+            color: var(--text-muted);
+        }
+
+        .pilot-type-option.selected svg { color: var(--accent); }
+
+        .pilot-type-option span {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .pilot-type-option.selected span { color: var(--accent); }
+
+        @keyframes authFadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-container { animation: authFadeIn 0.5s ease; }
     </style>
 </head>
 <body>
+
+<!-- ===== AUTH SCREEN ===== -->
+<div class="auth-screen" id="authScreen">
+    <div class="auth-bg"></div>
+    <div class="auth-container">
+        <div class="auth-logo">
+            <svg viewBox="0 0 32 32" fill="none">
+                <path d="M16 2L4 14h6v14h12V14h6L16 2z" fill="currentColor" opacity="0.3"/>
+                <path d="M8 18c4-6 12-6 16 0" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path d="M6 22c5-8 15-8 20 0" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.5"/>
+                <circle cx="16" cy="12" r="3" fill="currentColor"/>
+            </svg>
+            <h1>Crosswinds</h1>
+            <p>The community for pilots who share the sky</p>
+        </div>
+
+        <div class="auth-card">
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthTab('login')">Sign In</button>
+                <button class="auth-tab" onclick="switchAuthTab('signup')">Create Account</button>
+            </div>
+
+            <div class="auth-error" id="authError"></div>
+
+            <!-- LOGIN FORM -->
+            <form class="auth-form active" id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Email or Username</label>
+                    <input class="form-input" type="text" id="loginEmail" placeholder="you@email.com or @callsign" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input class="form-input" type="password" id="loginPassword" placeholder="Enter your password" required>
+                </div>
+                <div class="auth-forgot">
+                    <a onclick="showToast('Password reset link sent!')">Forgot password?</a>
+                </div>
+                <button class="auth-btn auth-btn-primary" type="submit">Sign In</button>
+
+                <div class="auth-divider">or continue with</div>
+
+                <div class="auth-social">
+                    <button type="button" class="auth-social-btn" onclick="socialLogin('Google')">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                        Google
+                    </button>
+                    <button type="button" class="auth-social-btn" onclick="socialLogin('Apple')">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                        Apple
+                    </button>
+                </div>
+            </form>
+
+            <!-- SIGNUP FORM -->
+            <form class="auth-form" id="signupForm" onsubmit="handleSignup(event)">
+                <div class="auth-row">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input class="form-input" type="text" id="signupFirst" placeholder="First name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input class="form-input" type="text" id="signupLast" placeholder="Last name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input class="form-input" type="email" id="signupEmail" placeholder="you@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Callsign / Username</label>
+                    <input class="form-input" type="text" id="signupUsername" placeholder="@your_callsign" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input class="form-input" type="password" id="signupPassword" placeholder="Min 8 characters" required minlength="8">
+                </div>
+
+                <label class="form-label">I am a...</label>
+                <div class="pilot-type-select" id="pilotTypeSelect">
+                    <div class="pilot-type-option" onclick="selectPilotType(this, 'airline')">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.4-.1.9.3 1.1l5.5 3.2-2.3 2.3-2.1-.6c-.4-.1-.8 0-1.1.3l-.1.1c-.3.3-.3.7-.1 1l1.9 2.4 2.4 1.9c.3.2.7.2 1-.1l.1-.1c.3-.3.4-.7.3-1.1l-.6-2.1 2.3-2.3 3.2 5.5c.2.4.7.5 1.1.3l.5-.3c.4-.2.6-.6.5-1.1z"/></svg>
+                        <span>Airline / Commercial</span>
+                    </div>
+                    <div class="pilot-type-option" onclick="selectPilotType(this, 'ga')">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                        <span>General Aviation</span>
+                    </div>
+                    <div class="pilot-type-option" onclick="selectPilotType(this, 'drone')">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                        <span>Drone / UAS</span>
+                    </div>
+                    <div class="pilot-type-option" onclick="selectPilotType(this, 'student')">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        <span>Student Pilot</span>
+                    </div>
+                </div>
+
+                <div class="auth-checkbox">
+                    <input type="checkbox" id="signupTerms" required>
+                    <label for="signupTerms">I agree to the <a>Terms of Service</a> and <a>Privacy Policy</a></label>
+                </div>
+
+                <button class="auth-btn auth-btn-primary" type="submit">Create Account</button>
+
+                <div class="auth-divider">or sign up with</div>
+
+                <div class="auth-social">
+                    <button type="button" class="auth-social-btn" onclick="socialLogin('Google')">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                        Google
+                    </button>
+                    <button type="button" class="auth-social-btn" onclick="socialLogin('Apple')">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                        Apple
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="auth-footer">
+            By continuing, you agree to Crosswinds' <a>Terms</a> and <a>Privacy Policy</a>
+        </div>
+    </div>
+</div>
 
 <!-- ===== TOP NAV ===== -->
 <nav class="topnav">
@@ -1287,7 +1695,7 @@
         Settings
     </div>
     <div class="user-menu-divider"></div>
-    <div class="user-menu-item" style="color: var(--danger);">
+    <div class="user-menu-item" style="color: var(--danger);" onclick="logout()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Log Out
     </div>
@@ -1425,7 +1833,7 @@
         <div class="page-view" id="page-groups">
             <div class="page-header">
                 <h2>Groups</h2>
-                <button class="btn btn-primary">+ Create Group</button>
+                <button class="btn btn-primary" onclick="showToast('Group creation coming soon!')">+ Create Group</button>
             </div>
             <div class="groups-grid" id="groupsGrid"></div>
         </div>
@@ -1526,7 +1934,7 @@
                             <input class="form-input" type="number" value="4200">
                         </div>
                     </div>
-                    <button class="btn btn-primary">Save Profile</button>
+                    <button class="btn btn-primary" onclick="showToast('Profile saved!')">Save Profile</button>
                 </div>
             </div>
 
@@ -1540,8 +1948,8 @@
                         <span class="cert-tag">B737 Type Rating ✕</span>
                     </div>
                     <div class="form-row">
-                        <input class="form-input" type="text" placeholder="Add certification...">
-                        <button class="btn btn-secondary">Add</button>
+                        <input class="form-input" type="text" placeholder="Add certification..." id="newCertInput">
+                        <button class="btn btn-secondary" onclick="addCert()">Add</button>
                     </div>
                 </div>
             </div>
@@ -2380,7 +2788,6 @@ function switchProfileTab(btn, tab) {
             </div>
         `;
     } else if (tab === 'flights') {
-        renderProfileContent();
         el.innerHTML = '';
         flightLogs.slice(0, 5).forEach(f => {
             const card = document.createElement('div');
@@ -2413,10 +2820,45 @@ function viewUser(handle) {
     const user = users.find(u => u.handle === handle);
     if (!user) return;
     navigate('profile');
-    // Update profile page for viewed user
-    document.querySelector('.profile-avatar-lg').textContent = user.initials;
+
+    const isOwnProfile = (handle === currentUser.handle);
+    const avatar = document.querySelector('.profile-avatar-lg');
+    avatar.textContent = user.initials;
+    avatar.style.background = user.gradient;
     document.querySelector('.profile-name').textContent = user.name;
     document.querySelector('.profile-handle').textContent = user.handle;
+    document.querySelector('.profile-bio').textContent = user.type + ' • ' + user.hours + ' flight hours';
+
+    const statsRow = document.querySelector('.profile-stats-row');
+    statsRow.innerHTML = `
+        <div class="profile-stat"><strong>${Math.floor(Math.random()*3000+200)}</strong> followers</div>
+        <div class="profile-stat"><strong>${Math.floor(Math.random()*500+50)}</strong> following</div>
+        <div class="profile-stat"><strong>${Math.floor(Math.random()*200+10)}</strong> posts</div>
+        <div class="profile-stat"><strong>${user.hours.toLocaleString()}</strong> flight hours</div>
+    `;
+
+    const certsEl = document.querySelector('.profile-certs');
+    certsEl.innerHTML = user.certs.map(c => `<span class="cert-tag">${c}</span>`).join('');
+
+    // Show Follow button instead of Edit Profile for other users
+    const editBtn = document.querySelector('.profile-info .btn-secondary');
+    if (isOwnProfile) {
+        editBtn.textContent = 'Edit Profile';
+        editBtn.onclick = () => navigate('settings');
+    } else {
+        const isFollowed = followedUsers.has(users.indexOf(user));
+        editBtn.textContent = isFollowed ? 'Following' : 'Follow';
+        editBtn.onclick = () => {
+            const idx = users.indexOf(user);
+            if (followedUsers.has(idx)) {
+                followedUsers.delete(idx);
+                editBtn.textContent = 'Follow';
+            } else {
+                followedUsers.add(idx);
+                editBtn.textContent = 'Following';
+            }
+        };
+    }
 }
 
 function handleSearch(event) {
@@ -2457,6 +2899,147 @@ document.addEventListener('click', (e) => {
 document.getElementById('uploadModal').addEventListener('click', (e) => {
     if (e.target === document.getElementById('uploadModal')) closeUploadModal();
 });
+
+// ===== AUTH FUNCTIONS =====
+let selectedPilotType = null;
+
+function switchAuthTab(tab) {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+    document.getElementById('authError').classList.remove('show');
+
+    if (tab === 'login') {
+        document.querySelector('.auth-tab:first-child').classList.add('active');
+        document.getElementById('loginForm').classList.add('active');
+    } else {
+        document.querySelector('.auth-tab:last-child').classList.add('active');
+        document.getElementById('signupForm').classList.add('active');
+    }
+}
+
+function selectPilotType(el, type) {
+    document.querySelectorAll('.pilot-type-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedPilotType = type;
+}
+
+function showAuthError(msg) {
+    const el = document.getElementById('authError');
+    el.textContent = msg;
+    el.classList.add('show');
+}
+
+function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPassword').value;
+
+    if (!email || !pass) {
+        showAuthError('Please fill in all fields.');
+        return;
+    }
+
+    // Simulate login
+    enterApp(email.includes('@') ? email.split('@')[0] : email.replace('@', ''));
+}
+
+function handleSignup(e) {
+    e.preventDefault();
+    const first = document.getElementById('signupFirst').value.trim();
+    const last = document.getElementById('signupLast').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const username = document.getElementById('signupUsername').value.trim();
+    const pass = document.getElementById('signupPassword').value;
+    const terms = document.getElementById('signupTerms').checked;
+
+    if (!first || !last || !email || !username || !pass) {
+        showAuthError('Please fill in all fields.');
+        return;
+    }
+
+    if (pass.length < 8) {
+        showAuthError('Password must be at least 8 characters.');
+        return;
+    }
+
+    if (!terms) {
+        showAuthError('Please agree to the Terms of Service.');
+        return;
+    }
+
+    if (!selectedPilotType) {
+        showAuthError('Please select your pilot type.');
+        return;
+    }
+
+    // Update the current user with signup info
+    const initials = (first[0] + last[0]).toUpperCase();
+    currentUser.name = first + ' ' + last;
+    currentUser.handle = username.startsWith('@') ? username : '@' + username;
+    currentUser.initials = initials;
+
+    // Update all visible initials
+    enterApp(first);
+}
+
+function socialLogin(provider) {
+    enterApp(provider + ' User');
+}
+
+function enterApp(name) {
+    const screen = document.getElementById('authScreen');
+    screen.style.transition = 'opacity 0.4s ease';
+    screen.style.opacity = '0';
+    setTimeout(() => {
+        screen.classList.add('hidden');
+        screen.style.opacity = '';
+        refreshUserUI();
+        showToast('Welcome to Crosswinds, ' + name + '!');
+    }, 400);
+}
+
+function refreshUserUI() {
+    // Update topnav avatar
+    document.getElementById('userAvatarBtn').textContent = currentUser.initials;
+    // Update composer avatar
+    const composerAvatar = document.querySelector('.composer-avatar');
+    if (composerAvatar) composerAvatar.textContent = currentUser.initials;
+    // Update profile page
+    const profileAvatar = document.querySelector('.profile-avatar-lg');
+    if (profileAvatar) profileAvatar.textContent = currentUser.initials;
+    const profileName = document.querySelector('.profile-name');
+    if (profileName) profileName.textContent = currentUser.name;
+    const profileHandle = document.querySelector('.profile-handle');
+    if (profileHandle) profileHandle.textContent = currentUser.handle;
+    // Re-render feed so new posts show correct user
+    renderFeed();
+}
+
+function logout() {
+    document.getElementById('authScreen').classList.remove('hidden');
+    document.getElementById('userMenu').classList.remove('open');
+    // Reset forms
+    document.getElementById('loginForm').reset();
+    document.getElementById('signupForm').reset();
+    document.getElementById('authError').classList.remove('show');
+    selectedPilotType = null;
+    document.querySelectorAll('.pilot-type-option').forEach(o => o.classList.remove('selected'));
+}
+
+function addCert() {
+    const input = document.getElementById('newCertInput');
+    const val = input.value.trim();
+    if (!val) return;
+    currentUser.certs.push(val);
+    const container = document.querySelector('#page-settings .profile-certs');
+    if (container) {
+        container.innerHTML = currentUser.certs.map(c =>
+            `<span class="cert-tag">${c} ✕</span>`
+        ).join('');
+    }
+    input.value = '';
+    showToast('Certification added!');
+}
 
 // ===== INIT =====
 renderFeed();
