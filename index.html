@@ -1,0 +1,2471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crosswinds — Pilot Community</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --sky-dark: #0a1628;
+            --sky-mid: #122240;
+            --sky-light: #1a3358;
+            --horizon: #2a5f8f;
+            --accent: #00b4d8;
+            --accent-glow: #48cae4;
+            --accent-dim: rgba(0,180,216,0.15);
+            --sunset: #f77f00;
+            --sunset-light: #fcbf49;
+            --danger: #e63946;
+            --success: #06d6a0;
+            --text-primary: #edf2f4;
+            --text-secondary: #8d99ae;
+            --text-muted: #5a6a80;
+            --card-bg: rgba(18, 34, 64, 0.85);
+            --card-border: rgba(0,180,216,0.12);
+            --glass: rgba(10, 22, 40, 0.92);
+            --input-bg: rgba(26, 51, 88, 0.6);
+            --radius: 14px;
+            --radius-sm: 8px;
+            --radius-xs: 6px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.35);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
+            --transition: 0.2s ease;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--sky-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--sky-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--horizon); border-radius: 3px; }
+
+        /* ===== TOP NAV ===== */
+        .topnav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            height: 60px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .topnav-brand {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 1.25rem; font-weight: 700; color: var(--accent);
+            cursor: pointer; text-decoration: none;
+        }
+
+        .topnav-brand svg { width: 32px; height: 32px; }
+
+        .topnav-search {
+            flex: 0 1 420px;
+            position: relative;
+        }
+
+        .topnav-search input {
+            width: 100%;
+            padding: 8px 16px 8px 40px;
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .topnav-search input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-dim);
+        }
+
+        .topnav-search input::placeholder { color: var(--text-muted); }
+
+        .topnav-search .search-icon {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); pointer-events: none;
+        }
+
+        .topnav-actions {
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .nav-btn {
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            background: transparent; border: none; color: var(--text-secondary);
+            border-radius: 50%; cursor: pointer; transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-btn:hover { background: var(--accent-dim); color: var(--accent); }
+        .nav-btn.active { color: var(--accent); }
+
+        .nav-btn .badge {
+            position: absolute; top: 4px; right: 4px;
+            width: 18px; height: 18px;
+            background: var(--danger);
+            color: #fff; font-size: 0.65rem; font-weight: 700;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .avatar-sm {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--sunset));
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.8rem; color: #fff;
+            cursor: pointer; border: 2px solid transparent;
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        .avatar-sm:hover { border-color: var(--accent); }
+
+        /* ===== SIDEBAR NAV ===== */
+        .sidebar {
+            position: fixed; top: 60px; left: 0; bottom: 0;
+            width: 240px; z-index: 900;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--card-border);
+            padding: 16px 12px;
+            display: flex; flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .sidebar-section { margin-bottom: 24px; }
+        .sidebar-label {
+            font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.08em; color: var(--text-muted);
+            padding: 0 12px; margin-bottom: 8px;
+        }
+
+        .sidebar-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            cursor: pointer; transition: var(--transition);
+            font-size: 0.9rem; text-decoration: none;
+        }
+
+        .sidebar-link:hover { background: var(--accent-dim); color: var(--text-primary); }
+        .sidebar-link.active { background: var(--accent-dim); color: var(--accent); font-weight: 600; }
+
+        .sidebar-link svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 12px;
+            border-top: 1px solid var(--card-border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        .main-wrapper {
+            margin-top: 60px;
+            margin-left: 240px;
+            display: flex;
+            min-height: calc(100vh - 60px);
+        }
+
+        .main-content {
+            flex: 1;
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 24px 20px;
+        }
+
+        .right-panel {
+            width: 320px;
+            flex-shrink: 0;
+            padding: 24px 16px;
+            border-left: 1px solid var(--card-border);
+            position: sticky; top: 60px;
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+        }
+
+        /* ===== PAGE VIEWS ===== */
+        .page-view { display: none; }
+        .page-view.active { display: block; }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: var(--transition);
+        }
+
+        .card:hover { border-color: rgba(0,180,216,0.25); }
+
+        /* ===== COMPOSER ===== */
+        .composer {
+            display: flex; gap: 12px; align-items: flex-start;
+        }
+
+        .composer-avatar {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--sunset));
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; color: #fff; flex-shrink: 0;
+        }
+
+        .composer-body { flex: 1; }
+
+        .composer-input {
+            width: 100%;
+            min-height: 60px;
+            padding: 12px 16px;
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            resize: vertical;
+            outline: none;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .composer-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-dim);
+        }
+
+        .composer-input::placeholder { color: var(--text-muted); }
+
+        .composer-actions {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 12px;
+        }
+
+        .composer-tools {
+            display: flex; gap: 4px;
+        }
+
+        .composer-tool-btn {
+            padding: 8px 10px;
+            background: transparent; border: none;
+            color: var(--text-muted); cursor: pointer;
+            border-radius: var(--radius-xs);
+            transition: var(--transition);
+            display: flex; align-items: center; gap: 6px;
+            font-size: 0.8rem;
+        }
+
+        .composer-tool-btn:hover { background: var(--accent-dim); color: var(--accent); }
+
+        .btn {
+            padding: 8px 20px;
+            border-radius: 24px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--sky-dark);
+        }
+
+        .btn-primary:hover { background: var(--accent-glow); }
+
+        .btn-secondary {
+            background: var(--input-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--card-border);
+        }
+
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+        }
+
+        .btn-ghost:hover { color: var(--accent); }
+
+        .btn-sunset {
+            background: var(--sunset);
+            color: #fff;
+        }
+
+        .btn-sunset:hover { background: var(--sunset-light); color: var(--sky-dark); }
+
+        /* ===== POST CARD ===== */
+        .post { padding: 0; overflow: hidden; }
+
+        .post-header {
+            display: flex; align-items: center; gap: 12px;
+            padding: 16px 20px 12px;
+        }
+
+        .post-avatar {
+            width: 42px; height: 42px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; color: #fff; flex-shrink: 0;
+            font-size: 0.85rem;
+        }
+
+        .post-user-info { flex: 1; }
+        .post-username {
+            font-weight: 600; font-size: 0.95rem; color: var(--text-primary);
+            cursor: pointer;
+        }
+        .post-username:hover { color: var(--accent); }
+
+        .post-meta {
+            font-size: 0.78rem; color: var(--text-muted);
+            display: flex; align-items: center; gap: 6px;
+        }
+
+        .post-meta .cert-badge {
+            background: var(--accent-dim);
+            color: var(--accent);
+            padding: 1px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .post-menu-btn {
+            background: none; border: none; color: var(--text-muted);
+            cursor: pointer; padding: 4px; border-radius: 50%;
+        }
+
+        .post-menu-btn:hover { color: var(--text-primary); background: var(--accent-dim); }
+
+        .post-body {
+            padding: 0 20px 12px;
+            font-size: 0.93rem;
+            line-height: 1.55;
+            color: var(--text-primary);
+        }
+
+        .post-body .hashtag { color: var(--accent); cursor: pointer; }
+        .post-body .hashtag:hover { text-decoration: underline; }
+
+        .post-media {
+            width: 100%;
+            max-height: 500px;
+            overflow: hidden;
+            background: var(--sky-mid);
+            position: relative;
+        }
+
+        .post-media img, .post-media video {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .post-media .media-placeholder {
+            width: 100%;
+            height: 320px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .post-media .media-placeholder svg { opacity: 0.4; }
+
+        .post-flight-tag {
+            display: inline-flex; align-items: center; gap: 6px;
+            margin: 8px 20px 4px;
+            padding: 6px 12px;
+            background: rgba(247, 127, 0, 0.1);
+            border: 1px solid rgba(247, 127, 0, 0.2);
+            border-radius: 20px;
+            font-size: 0.78rem;
+            color: var(--sunset-light);
+        }
+
+        .post-flight-tag svg { width: 14px; height: 14px; }
+
+        .post-stats {
+            display: flex; align-items: center; gap: 16px;
+            padding: 8px 20px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .post-actions {
+            display: flex;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .post-action-btn {
+            flex: 1;
+            padding: 12px;
+            background: none; border: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem; font-weight: 500;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: var(--transition);
+        }
+
+        .post-action-btn:hover { background: var(--accent-dim); color: var(--accent); }
+        .post-action-btn.liked { color: var(--danger); }
+        .post-action-btn.liked:hover { color: var(--danger); }
+
+        .post-action-btn svg { width: 18px; height: 18px; }
+
+        /* ===== COMMENTS SECTION ===== */
+        .post-comments {
+            border-top: 1px solid var(--card-border);
+            padding: 12px 20px;
+            display: none;
+        }
+
+        .post-comments.open { display: block; }
+
+        .comment {
+            display: flex; gap: 10px;
+            padding: 10px 0;
+        }
+
+        .comment + .comment { border-top: 1px solid rgba(255,255,255,0.04); }
+
+        .comment-avatar {
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.7rem; font-weight: 700; color: #fff;
+            flex-shrink: 0;
+        }
+
+        .comment-body { flex: 1; }
+        .comment-author { font-weight: 600; font-size: 0.82rem; }
+        .comment-text { font-size: 0.85rem; color: var(--text-secondary); margin-top: 2px; }
+        .comment-time { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; }
+
+        .comment-input-row {
+            display: flex; gap: 8px; margin-top: 8px;
+        }
+
+        .comment-input-row input {
+            flex: 1;
+            padding: 8px 14px;
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .comment-input-row input:focus {
+            border-color: var(--accent);
+        }
+
+        /* ===== RIGHT PANEL WIDGETS ===== */
+        .widget { margin-bottom: 20px; }
+
+        .widget-title {
+            font-size: 0.85rem; font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .widget-title svg { width: 16px; height: 16px; color: var(--accent); }
+
+        /* Weather Widget */
+        .weather-card {
+            background: linear-gradient(135deg, rgba(42,95,143,0.4), rgba(0,180,216,0.15));
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 16px;
+        }
+
+        .weather-location {
+            font-size: 0.8rem; color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .weather-main {
+            display: flex; align-items: center; gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .weather-temp { font-size: 2rem; font-weight: 700; }
+
+        .weather-details {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+        }
+
+        .weather-detail {
+            font-size: 0.75rem; color: var(--text-secondary);
+        }
+
+        .weather-detail span { display: block; font-weight: 600; color: var(--text-primary); font-size: 0.85rem; }
+
+        /* Suggested Users */
+        .suggested-user {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 0;
+        }
+
+        .suggested-user + .suggested-user { border-top: 1px solid rgba(255,255,255,0.04); }
+
+        .suggested-user-avatar {
+            width: 38px; height: 38px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; color: #fff; font-size: 0.75rem; flex-shrink: 0;
+        }
+
+        .suggested-user-info { flex: 1; }
+        .suggested-user-name { font-size: 0.85rem; font-weight: 600; }
+        .suggested-user-type { font-size: 0.75rem; color: var(--text-muted); }
+
+        .follow-btn {
+            padding: 5px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--accent);
+            background: transparent;
+            color: var(--accent);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .follow-btn:hover {
+            background: var(--accent);
+            color: var(--sky-dark);
+        }
+
+        .follow-btn.following {
+            background: var(--accent-dim);
+            border-color: transparent;
+            color: var(--text-secondary);
+        }
+
+        /* Trending */
+        .trending-item {
+            padding: 10px 0;
+            cursor: pointer;
+        }
+
+        .trending-item + .trending-item { border-top: 1px solid rgba(255,255,255,0.04); }
+
+        .trending-item:hover .trending-tag { color: var(--accent); }
+
+        .trending-tag { font-size: 0.88rem; font-weight: 600; transition: var(--transition); }
+        .trending-count { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
+        /* ===== PROFILE PAGE ===== */
+        .profile-banner {
+            height: 200px;
+            background: linear-gradient(135deg, var(--sky-mid), var(--horizon), var(--accent));
+            border-radius: var(--radius);
+            margin-bottom: -50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-banner::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0;
+            height: 80px;
+            background: linear-gradient(to top, var(--sky-dark), transparent);
+        }
+
+        .profile-info {
+            position: relative;
+            padding: 0 20px;
+            display: flex; align-items: flex-end; gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar-lg {
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--sunset));
+            border: 4px solid var(--sky-dark);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; font-weight: 700; color: #fff;
+            flex-shrink: 0;
+        }
+
+        .profile-details { flex: 1; padding-bottom: 8px; }
+        .profile-name { font-size: 1.5rem; font-weight: 700; }
+        .profile-handle { font-size: 0.9rem; color: var(--text-muted); }
+
+        .profile-bio {
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .profile-stats-row {
+            display: flex; gap: 24px;
+            margin-top: 12px;
+        }
+
+        .profile-stat {
+            font-size: 0.85rem; color: var(--text-secondary);
+        }
+
+        .profile-stat strong {
+            color: var(--text-primary); font-weight: 700;
+        }
+
+        .profile-certs {
+            display: flex; gap: 8px; flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .cert-tag {
+            padding: 4px 12px;
+            background: var(--accent-dim);
+            border: 1px solid rgba(0,180,216,0.2);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--card-border);
+            margin-bottom: 20px;
+        }
+
+        .profile-tab {
+            padding: 12px 20px;
+            background: none; border: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem; font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .profile-tab:hover { color: var(--text-primary); }
+        .profile-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+        }
+
+        .media-grid-item {
+            aspect-ratio: 1;
+            background: var(--sky-mid);
+            border-radius: var(--radius-xs);
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .media-grid-item:hover { opacity: 0.8; }
+
+        .media-grid-item .overlay {
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center; gap: 16px;
+            opacity: 0;
+            transition: var(--transition);
+            color: #fff; font-weight: 600; font-size: 0.85rem;
+        }
+
+        .media-grid-item:hover .overlay { opacity: 1; }
+
+        /* ===== EXPLORE PAGE ===== */
+        .explore-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .explore-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .explore-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+        .explore-card-media {
+            height: 160px;
+            background: var(--sky-mid);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted);
+        }
+
+        .explore-card-info {
+            padding: 12px;
+        }
+
+        .explore-card-info h4 { font-size: 0.85rem; margin-bottom: 4px; }
+        .explore-card-info p { font-size: 0.75rem; color: var(--text-muted); }
+
+        /* ===== MESSAGES PAGE ===== */
+        .messages-layout {
+            display: flex;
+            height: calc(100vh - 108px);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .conversations-list {
+            width: 300px;
+            border-right: 1px solid var(--card-border);
+            overflow-y: auto;
+        }
+
+        .conversations-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .conversations-header h3 { font-size: 1.1rem; }
+
+        .convo-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .convo-item:hover { background: var(--accent-dim); }
+        .convo-item.active { background: var(--accent-dim); }
+
+        .convo-avatar {
+            width: 44px; height: 44px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; color: #fff; font-size: 0.8rem; flex-shrink: 0;
+        }
+
+        .convo-info { flex: 1; min-width: 0; }
+        .convo-name { font-weight: 600; font-size: 0.9rem; }
+        .convo-preview { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .convo-time { font-size: 0.7rem; color: var(--text-muted); }
+
+        .chat-area {
+            flex: 1;
+            display: flex; flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .chat-header-user {
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex; flex-direction: column; gap: 12px;
+        }
+
+        .chat-msg {
+            max-width: 70%;
+            padding: 10px 16px;
+            border-radius: 18px;
+            font-size: 0.9rem;
+            line-height: 1.45;
+        }
+
+        .chat-msg.sent {
+            align-self: flex-end;
+            background: var(--accent);
+            color: var(--sky-dark);
+            border-bottom-right-radius: 6px;
+        }
+
+        .chat-msg.received {
+            align-self: flex-start;
+            background: var(--sky-light);
+            color: var(--text-primary);
+            border-bottom-left-radius: 6px;
+        }
+
+        .chat-msg .msg-time {
+            font-size: 0.68rem;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+
+        .chat-input-area {
+            padding: 14px 20px;
+            border-top: 1px solid var(--card-border);
+            display: flex; gap: 10px; align-items: center;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 10px 18px;
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .chat-input-area input:focus { border-color: var(--accent); }
+
+        /* ===== FLIGHT LOG PAGE ===== */
+        .flight-log-entry {
+            display: flex; gap: 16px; align-items: center;
+        }
+
+        .flight-icon-circle {
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            background: var(--accent-dim);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent); flex-shrink: 0;
+        }
+
+        .flight-info { flex: 1; }
+        .flight-route { font-weight: 600; font-size: 0.95rem; }
+        .flight-detail { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+
+        .flight-duration {
+            text-align: right;
+        }
+
+        .flight-duration .time { font-weight: 700; font-size: 1rem; }
+        .flight-duration .date { font-size: 0.75rem; color: var(--text-muted); }
+
+        .flight-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .flight-stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            padding: 16px;
+            text-align: center;
+        }
+
+        .flight-stat-card .stat-value {
+            font-size: 1.5rem; font-weight: 700; color: var(--accent);
+        }
+
+        .flight-stat-card .stat-label {
+            font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;
+        }
+
+        /* ===== GROUPS PAGE ===== */
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .group-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .group-card:hover { border-color: var(--accent); }
+
+        .group-banner {
+            height: 80px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .group-info {
+            padding: 16px;
+        }
+
+        .group-name { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+        .group-desc { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 8px; }
+        .group-members { font-size: 0.75rem; color: var(--text-muted); }
+
+        /* ===== NOTIFICATIONS PANEL ===== */
+        .notif-dropdown {
+            position: absolute;
+            top: 52px; right: 60px;
+            width: 380px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            z-index: 1100;
+            display: none;
+            max-height: 480px;
+            overflow-y: auto;
+        }
+
+        .notif-dropdown.open { display: block; }
+
+        .notif-dropdown-header {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--card-border);
+            font-weight: 700;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .notif-item {
+            display: flex; gap: 12px; align-items: flex-start;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .notif-item:hover { background: var(--accent-dim); }
+        .notif-item.unread { border-left: 3px solid var(--accent); }
+
+        .notif-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; color: #fff; font-size: 0.7rem; flex-shrink: 0;
+        }
+
+        .notif-text { flex: 1; font-size: 0.85rem; line-height: 1.4; }
+        .notif-text strong { color: var(--text-primary); }
+        .notif-time { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; }
+
+        /* ===== UPLOAD MODAL ===== */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.open { display: flex; }
+
+        .modal {
+            background: var(--sky-mid);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 560px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .modal-header h3 { font-size: 1.1rem; }
+
+        .modal-close {
+            background: none; border: none; color: var(--text-muted);
+            font-size: 1.4rem; cursor: pointer; padding: 4px 8px;
+            border-radius: var(--radius-xs);
+        }
+
+        .modal-close:hover { color: var(--text-primary); background: var(--accent-dim); }
+
+        .modal-body { padding: 20px; }
+
+        .upload-zone {
+            border: 2px dashed var(--card-border);
+            border-radius: var(--radius);
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 16px;
+        }
+
+        .upload-zone:hover { border-color: var(--accent); background: var(--accent-dim); }
+
+        .upload-zone svg { margin-bottom: 12px; color: var(--text-muted); }
+        .upload-zone p { color: var(--text-secondary); font-size: 0.9rem; }
+        .upload-zone .upload-hint { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+
+        .form-group { margin-bottom: 16px; }
+
+        .form-label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--input-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .form-select { cursor: pointer; }
+        .form-select option { background: var(--sky-mid); }
+
+        .form-textarea { resize: vertical; min-height: 80px; }
+
+        .form-row {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+        }
+
+        .modal-footer {
+            padding: 14px 20px;
+            border-top: 1px solid var(--card-border);
+            display: flex; justify-content: flex-end; gap: 10px;
+        }
+
+        /* ===== USER MENU DROPDOWN ===== */
+        .user-menu {
+            position: absolute;
+            top: 52px; right: 12px;
+            width: 220px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            z-index: 1100;
+            display: none;
+            padding: 8px;
+        }
+
+        .user-menu.open { display: block; }
+
+        .user-menu-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.88rem;
+            transition: var(--transition);
+        }
+
+        .user-menu-item:hover { background: var(--accent-dim); color: var(--text-primary); }
+        .user-menu-item svg { width: 18px; height: 18px; }
+
+        .user-menu-divider {
+            height: 1px;
+            background: var(--card-border);
+            margin: 6px 0;
+        }
+
+        /* ===== SETTINGS PAGE ===== */
+        .settings-section {
+            margin-bottom: 32px;
+        }
+
+        .settings-section h3 {
+            font-size: 1rem;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+        }
+
+        .setting-row + .setting-row {
+            border-top: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .setting-info h4 { font-size: 0.9rem; margin-bottom: 2px; }
+        .setting-info p { font-size: 0.78rem; color: var(--text-muted); }
+
+        .toggle {
+            width: 44px; height: 24px;
+            background: var(--sky-light);
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle.on { background: var(--accent); }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: #fff;
+            top: 2px; left: 2px;
+            transition: var(--transition);
+        }
+
+        .toggle.on::after { left: 22px; }
+
+        /* ===== PAGE HEADERS ===== */
+        .page-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .page-header h2 { font-size: 1.3rem; }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state svg { margin-bottom: 16px; opacity: 0.3; }
+        .empty-state h3 { color: var(--text-secondary); margin-bottom: 8px; }
+        .empty-state p { font-size: 0.9rem; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1200px) {
+            .right-panel { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-wrapper { margin-left: 0; }
+            .topnav-search { display: none; }
+            .flight-stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .groups-grid { grid-template-columns: 1fr; }
+            .messages-layout { flex-direction: column; }
+            .conversations-list { width: 100%; max-height: 200px; }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card { animation: fadeIn 0.3s ease; }
+    </style>
+</head>
+<body>
+
+<!-- ===== TOP NAV ===== -->
+<nav class="topnav">
+    <a class="topnav-brand" onclick="navigate('feed')">
+        <svg viewBox="0 0 32 32" fill="none">
+            <path d="M16 2L4 14h6v14h12V14h6L16 2z" fill="currentColor" opacity="0.3"/>
+            <path d="M8 18c4-6 12-6 16 0" stroke="currentColor" stroke-width="2" fill="none"/>
+            <path d="M6 22c5-8 15-8 20 0" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.5"/>
+            <circle cx="16" cy="12" r="3" fill="currentColor"/>
+        </svg>
+        Crosswinds
+    </a>
+
+    <div class="topnav-search">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" placeholder="Search pilots, posts, flights..." id="globalSearch" onkeyup="handleSearch(event)">
+    </div>
+
+    <div class="topnav-actions">
+        <button class="nav-btn" title="Upload" onclick="openUploadModal()">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </button>
+        <button class="nav-btn" title="Notifications" onclick="toggleNotifications()" id="notifBtn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="badge">4</span>
+        </button>
+        <div class="avatar-sm" onclick="toggleUserMenu()" id="userAvatarBtn">MR</div>
+    </div>
+</nav>
+
+<!-- ===== NOTIFICATION DROPDOWN ===== -->
+<div class="notif-dropdown" id="notifDropdown">
+    <div class="notif-dropdown-header">
+        <span>Notifications</span>
+        <button class="btn btn-ghost" style="font-size: 0.78rem;" onclick="markAllRead()">Mark all read</button>
+    </div>
+    <div class="notif-item unread">
+        <div class="notif-avatar" style="background: linear-gradient(135deg, #06d6a0, #48cae4);">SC</div>
+        <div>
+            <div class="notif-text"><strong>SkyCapt_Ava</strong> liked your sunset approach photo</div>
+            <div class="notif-time">12 minutes ago</div>
+        </div>
+    </div>
+    <div class="notif-item unread">
+        <div class="notif-avatar" style="background: linear-gradient(135deg, #f77f00, #fcbf49);">JW</div>
+        <div>
+            <div class="notif-text"><strong>JetWash_Mike</strong> commented on your post: "Incredible crosswind landing!"</div>
+            <div class="notif-time">38 minutes ago</div>
+        </div>
+    </div>
+    <div class="notif-item unread">
+        <div class="notif-avatar" style="background: linear-gradient(135deg, #e63946, #f77f00);">DP</div>
+        <div>
+            <div class="notif-text"><strong>DronePilotX</strong> started following you</div>
+            <div class="notif-time">1 hour ago</div>
+        </div>
+    </div>
+    <div class="notif-item unread">
+        <div class="notif-avatar" style="background: linear-gradient(135deg, #48cae4, #06d6a0);">CW</div>
+        <div>
+            <div class="notif-text">You were mentioned in <strong>Crosswind Landing Crew</strong></div>
+            <div class="notif-time">2 hours ago</div>
+        </div>
+    </div>
+    <div class="notif-item">
+        <div class="notif-avatar" style="background: linear-gradient(135deg, #8d99ae, #2a5f8f);">TF</div>
+        <div>
+            <div class="notif-text"><strong>TailwindFlyer</strong> shared your flight log from KJFK → KLAX</div>
+            <div class="notif-time">Yesterday</div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== USER MENU ===== -->
+<div class="user-menu" id="userMenu">
+    <div class="user-menu-item" onclick="navigate('profile')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        My Profile
+    </div>
+    <div class="user-menu-item" onclick="navigate('flightlog')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+        Flight Log
+    </div>
+    <div class="user-menu-item" onclick="navigate('settings')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        Settings
+    </div>
+    <div class="user-menu-divider"></div>
+    <div class="user-menu-item" style="color: var(--danger);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Log Out
+    </div>
+</div>
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+    <div class="sidebar-section">
+        <div class="sidebar-label">Main</div>
+        <a class="sidebar-link active" id="nav-feed" onclick="navigate('feed')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Feed
+        </a>
+        <a class="sidebar-link" id="nav-explore" onclick="navigate('explore')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            Explore
+        </a>
+        <a class="sidebar-link" id="nav-messages" onclick="navigate('messages')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Messages
+        </a>
+        <a class="sidebar-link" id="nav-groups" onclick="navigate('groups')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Groups
+        </a>
+    </div>
+
+    <div class="sidebar-section">
+        <div class="sidebar-label">Logbook</div>
+        <a class="sidebar-link" id="nav-flightlog" onclick="navigate('flightlog')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+            Flight Log
+        </a>
+        <a class="sidebar-link" id="nav-profile" onclick="navigate('profile')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            My Profile
+        </a>
+    </div>
+
+    <div class="sidebar-section">
+        <div class="sidebar-label">My Groups</div>
+        <a class="sidebar-link" onclick="navigate('groups')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            Crosswind Crew
+        </a>
+        <a class="sidebar-link" onclick="navigate('groups')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            DroneTech Hub
+        </a>
+        <a class="sidebar-link" onclick="navigate('groups')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+            Weather Watchers
+        </a>
+    </div>
+
+    <div class="sidebar-footer">
+        Crosswinds &copy; 2026
+    </div>
+</aside>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="main-wrapper">
+    <div class="main-content">
+
+        <!-- FEED PAGE -->
+        <div class="page-view active" id="page-feed">
+
+            <!-- Composer -->
+            <div class="card">
+                <div class="composer">
+                    <div class="composer-avatar">MR</div>
+                    <div class="composer-body">
+                        <textarea class="composer-input" id="composerInput" placeholder="Share a flight, photo, or update..."></textarea>
+                        <div class="composer-actions">
+                            <div class="composer-tools">
+                                <button class="composer-tool-btn" onclick="openUploadModal()">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                    Photo
+                                </button>
+                                <button class="composer-tool-btn" onclick="openUploadModal()">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+                                    Video
+                                </button>
+                                <button class="composer-tool-btn">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                    Location
+                                </button>
+                                <button class="composer-tool-btn">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+                                    Flight
+                                </button>
+                            </div>
+                            <button class="btn btn-primary" onclick="createPost()">Post</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Posts Feed -->
+            <div id="postsFeed"></div>
+
+        </div>
+
+        <!-- EXPLORE PAGE -->
+        <div class="page-view" id="page-explore">
+            <div class="page-header">
+                <h2>Explore</h2>
+            </div>
+            <div class="explore-grid" id="exploreGrid"></div>
+        </div>
+
+        <!-- MESSAGES PAGE -->
+        <div class="page-view" id="page-messages">
+            <div class="messages-layout">
+                <div class="conversations-list">
+                    <div class="conversations-header">
+                        <h3>Messages</h3>
+                        <button class="nav-btn" title="New message">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+                    </div>
+                    <div id="convoList"></div>
+                </div>
+                <div class="chat-area" id="chatArea">
+                    <div class="empty-state" id="chatEmpty">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        <h3>Select a conversation</h3>
+                        <p>Choose from your existing conversations or start a new one</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GROUPS PAGE -->
+        <div class="page-view" id="page-groups">
+            <div class="page-header">
+                <h2>Groups</h2>
+                <button class="btn btn-primary">+ Create Group</button>
+            </div>
+            <div class="groups-grid" id="groupsGrid"></div>
+        </div>
+
+        <!-- FLIGHT LOG PAGE -->
+        <div class="page-view" id="page-flightlog">
+            <div class="page-header">
+                <h2>Flight Log</h2>
+                <button class="btn btn-primary" onclick="openUploadModal()">+ Log Flight</button>
+            </div>
+            <div class="flight-stats-grid" id="flightStatsGrid"></div>
+            <div class="card">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                    <h3 style="font-size:1rem;">Recent Flights</h3>
+                    <select class="form-select" style="width:auto;padding:6px 12px;font-size:0.8rem;">
+                        <option>All Aircraft</option>
+                        <option>Fixed Wing</option>
+                        <option>Rotorcraft</option>
+                        <option>Drone / UAS</option>
+                    </select>
+                </div>
+                <div id="flightLogEntries"></div>
+            </div>
+        </div>
+
+        <!-- PROFILE PAGE -->
+        <div class="page-view" id="page-profile">
+            <div class="profile-banner"></div>
+            <div class="profile-info">
+                <div class="profile-avatar-lg">MR</div>
+                <div class="profile-details">
+                    <div class="profile-name">Maverick Reynolds</div>
+                    <div class="profile-handle">@maverick_flies</div>
+                    <div class="profile-bio">ATP-rated pilot & Part 107 drone operator. Chasing sunsets from FL350 and capturing them from 400ft AGL. Based at KJFK.</div>
+                    <div class="profile-stats-row">
+                        <div class="profile-stat"><strong>2,847</strong> followers</div>
+                        <div class="profile-stat"><strong>412</strong> following</div>
+                        <div class="profile-stat"><strong>189</strong> posts</div>
+                        <div class="profile-stat"><strong>4,200+</strong> flight hours</div>
+                    </div>
+                    <div class="profile-certs">
+                        <span class="cert-tag">ATP</span>
+                        <span class="cert-tag">Part 107</span>
+                        <span class="cert-tag">CFI</span>
+                        <span class="cert-tag">B737 Type Rating</span>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="navigate('settings')">Edit Profile</button>
+            </div>
+
+            <div class="profile-tabs">
+                <button class="profile-tab active" onclick="switchProfileTab(this, 'posts')">Posts</button>
+                <button class="profile-tab" onclick="switchProfileTab(this, 'media')">Media</button>
+                <button class="profile-tab" onclick="switchProfileTab(this, 'flights')">Flights</button>
+                <button class="profile-tab" onclick="switchProfileTab(this, 'likes')">Likes</button>
+            </div>
+
+            <div id="profileContent"></div>
+        </div>
+
+        <!-- SETTINGS PAGE -->
+        <div class="page-view" id="page-settings">
+            <div class="page-header">
+                <h2>Settings</h2>
+            </div>
+
+            <div class="card">
+                <div class="settings-section">
+                    <h3>Profile</h3>
+                    <div class="form-group">
+                        <label class="form-label">Display Name</label>
+                        <input class="form-input" type="text" value="Maverick Reynolds">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Username</label>
+                        <input class="form-input" type="text" value="@maverick_flies">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Bio</label>
+                        <textarea class="form-textarea">ATP-rated pilot & Part 107 drone operator. Chasing sunsets from FL350 and capturing them from 400ft AGL. Based at KJFK.</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Home Airport (ICAO)</label>
+                        <input class="form-input" type="text" value="KJFK">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Aircraft Type</label>
+                            <select class="form-select">
+                                <option>Boeing 737</option>
+                                <option>Cessna 172</option>
+                                <option>DJI Mavic 3</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Total Flight Hours</label>
+                            <input class="form-input" type="number" value="4200">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary">Save Profile</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="settings-section">
+                    <h3>Certifications</h3>
+                    <div class="profile-certs" style="margin-top:0; margin-bottom:12px;">
+                        <span class="cert-tag">ATP ✕</span>
+                        <span class="cert-tag">Part 107 ✕</span>
+                        <span class="cert-tag">CFI ✕</span>
+                        <span class="cert-tag">B737 Type Rating ✕</span>
+                    </div>
+                    <div class="form-row">
+                        <input class="form-input" type="text" placeholder="Add certification...">
+                        <button class="btn btn-secondary">Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="settings-section">
+                    <h3>Notifications</h3>
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <h4>Push Notifications</h4>
+                            <p>Receive notifications for likes, comments, and follows</p>
+                        </div>
+                        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+                    </div>
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <h4>Flight Alerts</h4>
+                            <p>Get notified about weather at your home airport</p>
+                        </div>
+                        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+                    </div>
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <h4>Group Activity</h4>
+                            <p>Notifications for new posts in your groups</p>
+                        </div>
+                        <div class="toggle" onclick="this.classList.toggle('on')"></div>
+                    </div>
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <h4>Message Sounds</h4>
+                            <p>Play a sound for incoming messages</p>
+                        </div>
+                        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="settings-section">
+                    <h3>Privacy</h3>
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <h4>Private Profile</h4>
+                            <p>Only approved followers can see your posts</p>
+                        </div>
+                        <div class="toggle" onclick="this.classList.toggle('on')"></div>
+                    </div>
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <h4>Show Flight Hours</h4>
+                            <p>Display total flight hours on your profile</p>
+                        </div>
+                        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+                    </div>
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <h4>Location on Posts</h4>
+                            <p>Automatically attach location to new posts</p>
+                        </div>
+                        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="settings-section">
+                    <h3>Appearance</h3>
+                    <div class="setting-row">
+                        <div class="setting-info">
+                            <h4>Unit System</h4>
+                            <p>Choose between imperial and metric</p>
+                        </div>
+                        <select class="form-select" style="width:auto;padding:6px 12px;">
+                            <option>Imperial (ft, nm, kts)</option>
+                            <option>Metric (m, km, km/h)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel" id="rightPanel">
+
+        <!-- Weather Widget -->
+        <div class="widget">
+            <div class="widget-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+                METAR — KJFK
+            </div>
+            <div class="weather-card">
+                <div class="weather-location">John F. Kennedy Intl</div>
+                <div class="weather-main">
+                    <div class="weather-temp">54°F</div>
+                    <div style="font-size:0.85rem;color:var(--text-secondary);">
+                        Scattered Clouds<br>
+                        <span style="font-size:0.78rem;color:var(--text-muted);">SCT040 BKN080</span>
+                    </div>
+                </div>
+                <div class="weather-details">
+                    <div class="weather-detail">Wind <span>270° @ 14kts G22</span></div>
+                    <div class="weather-detail">Visibility <span>10 SM</span></div>
+                    <div class="weather-detail">Altimeter <span>29.82 inHg</span></div>
+                    <div class="weather-detail">Crosswind <span>12 kts</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trending -->
+        <div class="widget">
+            <div class="widget-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                Trending
+            </div>
+            <div class="trending-item">
+                <div class="trending-tag">#CrosswindChallenge</div>
+                <div class="trending-count">1,247 posts</div>
+            </div>
+            <div class="trending-item">
+                <div class="trending-tag">#SunsetApproach</div>
+                <div class="trending-count">892 posts</div>
+            </div>
+            <div class="trending-item">
+                <div class="trending-tag">#DroneLife</div>
+                <div class="trending-count">634 posts</div>
+            </div>
+            <div class="trending-item">
+                <div class="trending-tag">#Part107</div>
+                <div class="trending-count">421 posts</div>
+            </div>
+            <div class="trending-item">
+                <div class="trending-tag">#CheckridePass</div>
+                <div class="trending-count">318 posts</div>
+            </div>
+        </div>
+
+        <!-- Suggested Pilots -->
+        <div class="widget">
+            <div class="widget-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                Suggested Pilots
+            </div>
+            <div id="suggestedPilots"></div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ===== UPLOAD MODAL ===== -->
+<div class="modal-overlay" id="uploadModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Upload Media</h3>
+            <button class="modal-close" onclick="closeUploadModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <p>Drop files here or click to browse</p>
+                <div class="upload-hint">Supports photos (JPG, PNG) and videos (MP4, MOV) up to 500MB</div>
+            </div>
+            <input type="file" id="fileInput" accept="image/*,video/*" multiple style="display:none" onchange="handleFileSelect(this)">
+            <div id="uploadPreview" style="margin-bottom:16px;"></div>
+
+            <div class="form-group">
+                <label class="form-label">Caption</label>
+                <textarea class="form-textarea" id="uploadCaption" placeholder="Describe your flight, share the story..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Media Type</label>
+                <select class="form-select" id="uploadType">
+                    <option value="photo">Photo</option>
+                    <option value="video">Video</option>
+                    <option value="timelapse">Timelapse</option>
+                    <option value="360">360° View</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Aircraft / Drone</label>
+                    <input class="form-input" id="uploadAircraft" placeholder="e.g. DJI Mavic 3, C172">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Altitude</label>
+                    <input class="form-input" id="uploadAltitude" placeholder="e.g. 400ft AGL">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Location / Airport</label>
+                    <input class="form-input" id="uploadLocation" placeholder="e.g. KJFK, Grand Canyon">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tags</label>
+                    <input class="form-input" id="uploadTags" placeholder="#sunset #crosswind">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeUploadModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="submitUpload()">Share Post</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+// ===== DATA =====
+const currentUser = {
+    name: 'Maverick Reynolds',
+    handle: '@maverick_flies',
+    initials: 'MR',
+    gradient: 'linear-gradient(135deg, #00b4d8, #f77f00)',
+    certs: ['ATP', 'Part 107', 'CFI'],
+    hours: 4200,
+    airport: 'KJFK'
+};
+
+const users = [
+    { name: 'SkyCapt Ava', handle: '@skycapt_ava', initials: 'SA', gradient: 'linear-gradient(135deg, #06d6a0, #48cae4)', type: 'Commercial Pilot • CFI', certs: ['CPL', 'CFI'], hours: 2800 },
+    { name: 'JetWash Mike', handle: '@jetwash_mike', initials: 'JM', gradient: 'linear-gradient(135deg, #f77f00, #fcbf49)', type: 'Airline Pilot • B777', certs: ['ATP', 'B777'], hours: 8500 },
+    { name: 'DronePilot X', handle: '@dronepilotx', initials: 'DP', gradient: 'linear-gradient(135deg, #e63946, #f77f00)', type: 'Part 107 Operator', certs: ['Part 107'], hours: 620 },
+    { name: 'TailwindFlyer', handle: '@tailwindflyer', initials: 'TF', gradient: 'linear-gradient(135deg, #8d99ae, #2a5f8f)', type: 'Private Pilot • Drone', certs: ['PPL', 'Part 107'], hours: 340 },
+    { name: 'CloudNine Kate', handle: '@cloudnine_kate', initials: 'CK', gradient: 'linear-gradient(135deg, #48cae4, #06d6a0)', type: 'Student Pilot', certs: ['Student'], hours: 45 },
+    { name: 'RotorHead Dan', handle: '@rotorhead_dan', initials: 'RD', gradient: 'linear-gradient(135deg, #9b59b6, #3498db)', type: 'Helicopter Pilot • CFII', certs: ['CPL-H', 'CFII'], hours: 3200 },
+    { name: 'FPV_Racer', handle: '@fpv_racer', initials: 'FR', gradient: 'linear-gradient(135deg, #e74c3c, #f39c12)', type: 'FPV Drone Pilot', certs: ['Part 107'], hours: 280 },
+];
+
+const posts = [
+    {
+        user: users[0], time: '2h ago',
+        text: 'Absolutely stunning approach into KASE today. The mountains were on fire with fall colors 🍂 Crosswind component was 18kts gusting 25 — kept things interesting! <span class="hashtag">#CrosswindChallenge</span> <span class="hashtag">#KASE</span>',
+        mediaType: 'photo', mediaLabel: 'Aspen approach with mountain backdrop',
+        flight: { route: 'KDEN → KASE', aircraft: 'CRJ-700' },
+        likes: 247, comments: 38, shares: 12,
+        commentsList: [
+            { user: users[1], text: 'That approach never gets old! The Roaring Fork Valley is something else.', time: '1h ago' },
+            { user: users[3], text: 'What was the wind doing at the threshold? I had a wild ride last week.', time: '45m ago' },
+        ]
+    },
+    {
+        user: users[2], time: '4h ago',
+        text: 'New cinematic reel from yesterday\'s sunset flight over the coast. DJI Mavic 3 Pro at 380ft AGL — golden hour doesn\'t disappoint. Full edit dropping this weekend. <span class="hashtag">#DroneLife</span> <span class="hashtag">#SunsetApproach</span> <span class="hashtag">#Part107</span>',
+        mediaType: 'video', mediaLabel: 'Coastal sunset drone footage',
+        flight: { route: 'Coastal Survey', aircraft: 'DJI Mavic 3 Pro' },
+        likes: 512, comments: 67, shares: 89,
+        commentsList: [
+            { user: users[4], text: 'The color grading is incredible! What software do you use?', time: '3h ago' },
+        ]
+    },
+    {
+        user: users[1], time: '6h ago',
+        text: 'Checkride passed! ✈️ First Officer on the B777 — officially widebody rated. Three years of grinding and it all paid off today. Grateful for every instructor and sim partner along the way. <span class="hashtag">#CheckridePass</span> <span class="hashtag">#B777</span>',
+        mediaType: 'photo', mediaLabel: 'Celebration photo in B777 cockpit',
+        flight: null,
+        likes: 1842, comments: 234, shares: 156,
+        commentsList: [
+            { user: users[0], text: 'Congrats Mike!! 🎉 Well deserved — you put in the work!', time: '5h ago' },
+            { user: users[5], text: 'Welcome to the heavy iron club! The 777 is an absolute dream to fly.', time: '4h ago' },
+        ]
+    },
+    {
+        user: users[5], time: '8h ago',
+        text: 'Night ops training in the R44. There\'s something magical about hovering over a city at night — you see the world differently from a helicopter. 65 hours until my CFII checkride. <span class="hashtag">#HelicopterLife</span> <span class="hashtag">#NightFlying</span>',
+        mediaType: 'photo', mediaLabel: 'Night helicopter city view',
+        flight: { route: 'KHWD Pattern', aircraft: 'Robinson R44' },
+        likes: 189, comments: 22, shares: 8,
+        commentsList: []
+    },
+    {
+        user: users[6], time: '12h ago',
+        text: 'Testing the new 5" freestyle build — this thing RIPS. Hitting 95mph on the straights and the tune is dialed. Race season starts in two weeks! <span class="hashtag">#FPV</span> <span class="hashtag">#DroneRacing</span>',
+        mediaType: 'video', mediaLabel: 'FPV freestyle flight footage',
+        flight: { route: 'Local FPV Course', aircraft: 'Custom 5" Quad' },
+        likes: 324, comments: 45, shares: 31,
+        commentsList: [
+            { user: users[2], text: 'What motors are you running? That acceleration is insane!', time: '11h ago' },
+        ]
+    },
+    {
+        user: users[3], time: '1d ago',
+        text: 'First solo cross-country! KFUL → KPSP → KTRM → KFUL. Desert flying is a whole different world — density altitude had me sweating during the run-up at Palm Springs. Made it back with 1.2 hours in the book. <span class="hashtag">#StudentPilot</span> <span class="hashtag">#CrossCountry</span>',
+        mediaType: 'photo', mediaLabel: 'Desert landscape from Cessna cockpit',
+        flight: { route: 'KFUL → KPSP → KTRM → KFUL', aircraft: 'Cessna 172S' },
+        likes: 567, comments: 89, shares: 34,
+        commentsList: [
+            { user: users[0], text: 'Great route choice! Desert XC is the best training. Keep at it!', time: '22h ago' },
+            { user: users[4], text: 'Palm Springs in summer... brave! That DA must have been wild.', time: '20h ago' },
+        ]
+    },
+];
+
+const conversations = [
+    {
+        user: users[0], lastMsg: 'Are you flying into KASE next week?', time: '2h ago',
+        messages: [
+            { text: 'Hey! Saw your post about the Aspen approach', sent: false, time: '3h ago' },
+            { text: 'Yeah it was incredible! The scenery was unreal', sent: true, time: '2h 45m ago' },
+            { text: 'I\'m planning a trip there next month. Any tips for the approach?', sent: false, time: '2h 30m ago' },
+            { text: 'Study the RNAV Y 15 approach — the terrain awareness is crucial. And check NOTAMs for the noise abatement procedures', sent: true, time: '2h 15m ago' },
+            { text: 'Are you flying into KASE next week?', sent: false, time: '2h ago' },
+        ]
+    },
+    {
+        user: users[1], lastMsg: 'Thanks for the congrats! Let\'s fly together soon', time: '5h ago',
+        messages: [
+            { text: 'CONGRATS on the 777 type rating!!', sent: true, time: '6h ago' },
+            { text: 'Thanks for the congrats! Let\'s fly together soon', sent: false, time: '5h ago' },
+        ]
+    },
+    {
+        user: users[2], lastMsg: 'I\'ll send you the LUT pack tomorrow', time: '1d ago',
+        messages: [
+            { text: 'Your drone footage is amazing. What\'s your color grading workflow?', sent: true, time: '2d ago' },
+            { text: 'Thanks! I use DaVinci Resolve with custom LUTs for that golden hour look', sent: false, time: '1d 20h ago' },
+            { text: 'Would you be willing to share your LUT pack?', sent: true, time: '1d 12h ago' },
+            { text: 'I\'ll send you the LUT pack tomorrow', sent: false, time: '1d ago' },
+        ]
+    },
+    {
+        user: users[5], lastMsg: 'Mountain flying course starts April 5th if you want to join', time: '2d ago',
+        messages: [
+            { text: 'Mountain flying course starts April 5th if you want to join', sent: false, time: '2d ago' },
+        ]
+    },
+];
+
+const groups = [
+    { name: 'Crosswind Landing Crew', desc: 'Share your best (and worst) crosswind landing stories. Tips, videos, and technique discussions.', members: '3,842 members', color: 'linear-gradient(135deg, #00b4d8, #0077b6)' },
+    { name: 'DroneTech Hub', desc: 'Everything drone — gear reviews, firmware updates, regulations, and flying spots.', members: '5,120 members', color: 'linear-gradient(135deg, #f77f00, #e63946)' },
+    { name: 'Weather Watchers', desc: 'METAR decoders, PIREP sharers, and weather geeks. Stay ahead of the wx.', members: '2,310 members', color: 'linear-gradient(135deg, #48cae4, #06d6a0)' },
+    { name: 'Student Pilots United', desc: 'Support group for student pilots. Ask questions, share checkride stories, get mentored.', members: '8,945 members', color: 'linear-gradient(135deg, #06d6a0, #048a6d)' },
+    { name: 'Aviation Photography', desc: 'Capturing the beauty of flight. Planespotting, cockpit shots, and aerial photography.', members: '6,203 members', color: 'linear-gradient(135deg, #9b59b6, #3498db)' },
+    { name: 'FPV Racing League', desc: 'Competitive drone racing community. Race results, build logs, and tuning tips.', members: '1,567 members', color: 'linear-gradient(135deg, #e74c3c, #f39c12)' },
+];
+
+const flightLogs = [
+    { route: 'KJFK → KLAX', aircraft: 'B737-800', duration: '5h 12m', date: 'Mar 24, 2026', type: 'Commercial', alt: 'FL350' },
+    { route: 'KLAX → KLAS', aircraft: 'B737-800', duration: '1h 04m', date: 'Mar 23, 2026', type: 'Commercial', alt: 'FL280' },
+    { route: 'Local — Hudson Valley', aircraft: 'DJI Mavic 3', duration: '0h 28m', date: 'Mar 22, 2026', type: 'Drone', alt: '400ft AGL' },
+    { route: 'KLAS → KDEN', aircraft: 'B737-800', duration: '2h 18m', date: 'Mar 21, 2026', type: 'Commercial', alt: 'FL370' },
+    { route: 'KDEN → KASE', aircraft: 'CRJ-700', duration: '0h 42m', date: 'Mar 20, 2026', type: 'Commercial', alt: 'FL220' },
+    { route: 'Local — Central Park', aircraft: 'DJI Mini 4 Pro', duration: '0h 15m', date: 'Mar 19, 2026', type: 'Drone', alt: '250ft AGL' },
+    { route: 'KJFK → KORD', aircraft: 'B737-800', duration: '2h 45m', date: 'Mar 18, 2026', type: 'Commercial', alt: 'FL350' },
+    { route: 'KFRG Pattern', aircraft: 'Cessna 172', duration: '1h 30m', date: 'Mar 17, 2026', type: 'GA', alt: '1500ft AGL' },
+];
+
+// ===== STATE =====
+let likedPosts = new Set();
+let followedUsers = new Set();
+
+// ===== RENDER FUNCTIONS =====
+function renderFeed() {
+    const feed = document.getElementById('postsFeed');
+    feed.innerHTML = posts.map((post, i) => `
+        <div class="card post">
+            <div class="post-header">
+                <div class="post-avatar" style="background: ${post.user.gradient};">${post.user.initials}</div>
+                <div class="post-user-info">
+                    <div class="post-username" onclick="viewUser('${post.user.handle}')">${post.user.name}</div>
+                    <div class="post-meta">
+                        <span>${post.time}</span>
+                        ${post.user.certs.map(c => `<span class="cert-badge">${c}</span>`).join('')}
+                    </div>
+                </div>
+                <button class="post-menu-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                </button>
+            </div>
+            <div class="post-body">${post.text}</div>
+            ${post.flight ? `
+            <div class="post-flight-tag">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.4-.1.9.3 1.1l5.5 3.2-2.3 2.3-2.1-.6c-.4-.1-.8 0-1.1.3l-.1.1c-.3.3-.3.7-.1 1l1.9 2.4 2.4 1.9c.3.2.7.2 1-.1l.1-.1c.3-.3.4-.7.3-1.1l-.6-2.1 2.3-2.3 3.2 5.5c.2.4.7.5 1.1.3l.5-.3c.4-.2.6-.6.5-1.1z"/></svg>
+                ${post.flight.route} • ${post.flight.aircraft}
+            </div>` : ''}
+            <div class="post-media">
+                <div class="media-placeholder">
+                    ${post.mediaType === 'video' ?
+                        `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>` :
+                        `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`
+                    }
+                    ${post.mediaLabel}
+                </div>
+            </div>
+            <div class="post-stats">
+                <span>${post.likes} likes</span>
+                <span>${post.comments} comments</span>
+                <span>${post.shares} shares</span>
+            </div>
+            <div class="post-actions">
+                <button class="post-action-btn ${likedPosts.has(i) ? 'liked' : ''}" onclick="toggleLike(${i})">
+                    <svg viewBox="0 0 24 24" fill="${likedPosts.has(i) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    ${likedPosts.has(i) ? 'Liked' : 'Like'}
+                </button>
+                <button class="post-action-btn" onclick="toggleComments(${i})">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    Comment
+                </button>
+                <button class="post-action-btn" onclick="sharePost(${i})">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                    Share
+                </button>
+            </div>
+            <div class="post-comments" id="comments-${i}">
+                ${post.commentsList.map(c => `
+                    <div class="comment">
+                        <div class="comment-avatar" style="background: ${c.user.gradient};">${c.user.initials}</div>
+                        <div class="comment-body">
+                            <div class="comment-author">${c.user.name}</div>
+                            <div class="comment-text">${c.text}</div>
+                            <div class="comment-time">${c.time}</div>
+                        </div>
+                    </div>
+                `).join('')}
+                <div class="comment-input-row">
+                    <div class="comment-avatar" style="background: ${currentUser.gradient};">${currentUser.initials}</div>
+                    <input type="text" placeholder="Write a comment..." onkeydown="if(event.key==='Enter')addComment(${i}, this)">
+                    <button class="btn btn-primary" style="padding:6px 14px;font-size:0.8rem;" onclick="addComment(${i}, this.previousElementSibling)">Post</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderExplore() {
+    const grid = document.getElementById('exploreGrid');
+    const exploreItems = [
+        { title: 'Sunset over KASE', user: 'SkyCapt Ava', type: 'Photo' },
+        { title: 'B777 Cockpit Tour', user: 'JetWash Mike', type: 'Video' },
+        { title: 'Coastal Drone Cinema', user: 'DronePilot X', type: 'Video' },
+        { title: 'Night Helicopter Ops', user: 'RotorHead Dan', type: 'Photo' },
+        { title: 'First Solo!', user: 'CloudNine Kate', type: 'Photo' },
+        { title: 'FPV Race Highlights', user: 'FPV_Racer', type: 'Video' },
+        { title: 'Mountain Flying Tips', user: 'TailwindFlyer', type: 'Article' },
+        { title: 'Crosswind Landing 35kts', user: 'SkyCapt Ava', type: 'Video' },
+        { title: 'Aurora from FL410', user: 'JetWash Mike', type: 'Photo' },
+        { title: 'DJI Mavic 3 Review', user: 'DronePilot X', type: 'Article' },
+        { title: 'Autorotation Practice', user: 'RotorHead Dan', type: 'Video' },
+        { title: 'METAR Decoded', user: 'TailwindFlyer', type: 'Article' },
+    ];
+    grid.innerHTML = exploreItems.map(item => `
+        <div class="explore-card">
+            <div class="explore-card-media">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.3;">
+                    ${item.type === 'Video' ? '<polygon points="5 3 19 12 5 21 5 3"/>' :
+                      item.type === 'Article' ? '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>' :
+                      '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>'}
+                </svg>
+            </div>
+            <div class="explore-card-info">
+                <h4>${item.title}</h4>
+                <p>${item.user} • ${item.type}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderMessages() {
+    const list = document.getElementById('convoList');
+    list.innerHTML = conversations.map((c, i) => `
+        <div class="convo-item" onclick="openChat(${i})">
+            <div class="convo-avatar" style="background: ${c.user.gradient};">${c.user.initials}</div>
+            <div class="convo-info">
+                <div class="convo-name">${c.user.name}</div>
+                <div class="convo-preview">${c.lastMsg}</div>
+            </div>
+            <div class="convo-time">${c.time}</div>
+        </div>
+    `).join('');
+}
+
+function openChat(index) {
+    const c = conversations[index];
+    document.querySelectorAll('.convo-item').forEach((el, i) => {
+        el.classList.toggle('active', i === index);
+    });
+
+    const area = document.getElementById('chatArea');
+    area.innerHTML = `
+        <div class="chat-header">
+            <div class="chat-header-user">
+                <div class="convo-avatar" style="background: ${c.user.gradient}; width:36px; height:36px; font-size:0.75rem;">${c.user.initials}</div>
+                <div>
+                    <div style="font-weight:600; font-size:0.95rem;">${c.user.name}</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted);">${c.user.type}</div>
+                </div>
+            </div>
+            <button class="nav-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            </button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            ${c.messages.map(m => `
+                <div class="chat-msg ${m.sent ? 'sent' : 'received'}">
+                    ${m.text}
+                    <div class="msg-time">${m.time}</div>
+                </div>
+            `).join('')}
+        </div>
+        <div class="chat-input-area">
+            <button class="nav-btn" style="flex-shrink:0;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <input type="text" placeholder="Type a message..." id="chatInput" onkeydown="if(event.key==='Enter')sendMessage(${index})">
+            <button class="btn btn-primary" style="padding:8px 16px;" onclick="sendMessage(${index})">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+        </div>
+    `;
+
+    const msgs = document.getElementById('chatMessages');
+    msgs.scrollTop = msgs.scrollHeight;
+}
+
+function sendMessage(convoIndex) {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    conversations[convoIndex].messages.push({ text, sent: true, time: 'Just now' });
+    conversations[convoIndex].lastMsg = text;
+    conversations[convoIndex].time = 'Just now';
+
+    openChat(convoIndex);
+    renderMessages();
+
+    // Simulate reply
+    setTimeout(() => {
+        const replies = [
+            'Roger that! ✈️',
+            'Sounds good, let me check my schedule.',
+            'Ha! That\'s exactly what happened to me last week.',
+            'Great idea — I\'ll look into it.',
+            'Copy, will send the details shortly.',
+            'That\'s awesome! Keep me posted.',
+        ];
+        conversations[convoIndex].messages.push({
+            text: replies[Math.floor(Math.random() * replies.length)],
+            sent: false,
+            time: 'Just now'
+        });
+        openChat(convoIndex);
+    }, 2000);
+}
+
+function renderGroups() {
+    const grid = document.getElementById('groupsGrid');
+    grid.innerHTML = groups.map(g => `
+        <div class="group-card">
+            <div class="group-banner" style="background: ${g.color};">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="group-info">
+                <div class="group-name">${g.name}</div>
+                <div class="group-desc">${g.desc}</div>
+                <div class="group-members">${g.members}</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderFlightLog() {
+    // Stats
+    const statsGrid = document.getElementById('flightStatsGrid');
+    statsGrid.innerHTML = `
+        <div class="flight-stat-card">
+            <div class="stat-value">4,200+</div>
+            <div class="stat-label">Total Hours</div>
+        </div>
+        <div class="flight-stat-card">
+            <div class="stat-value">847</div>
+            <div class="stat-label">Flights Logged</div>
+        </div>
+        <div class="flight-stat-card">
+            <div class="stat-value">142</div>
+            <div class="stat-label">Airports Visited</div>
+        </div>
+        <div class="flight-stat-card">
+            <div class="stat-value">38</div>
+            <div class="stat-label">Drone Flights</div>
+        </div>
+    `;
+
+    // Entries
+    const entries = document.getElementById('flightLogEntries');
+    entries.innerHTML = flightLogs.map(f => `
+        <div class="card" style="padding:14px 20px; margin-bottom:8px;">
+            <div class="flight-log-entry">
+                <div class="flight-icon-circle">
+                    ${f.type === 'Drone' ?
+                        `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>` :
+                        `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.4-.1.9.3 1.1l5.5 3.2-2.3 2.3-2.1-.6c-.4-.1-.8 0-1.1.3l-.1.1c-.3.3-.3.7-.1 1l1.9 2.4 2.4 1.9c.3.2.7.2 1-.1l.1-.1c.3-.3.4-.7.3-1.1l-.6-2.1 2.3-2.3 3.2 5.5c.2.4.7.5 1.1.3l.5-.3c.4-.2.6-.6.5-1.1z"/></svg>`
+                    }
+                </div>
+                <div class="flight-info">
+                    <div class="flight-route">${f.route}</div>
+                    <div class="flight-detail">${f.aircraft} • ${f.alt} • ${f.type}</div>
+                </div>
+                <div class="flight-duration">
+                    <div class="time">${f.duration}</div>
+                    <div class="date">${f.date}</div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderSuggested() {
+    const el = document.getElementById('suggestedPilots');
+    el.innerHTML = users.slice(0, 5).map((u, i) => `
+        <div class="suggested-user">
+            <div class="suggested-user-avatar" style="background: ${u.gradient};">${u.initials}</div>
+            <div class="suggested-user-info">
+                <div class="suggested-user-name">${u.name}</div>
+                <div class="suggested-user-type">${u.type}</div>
+            </div>
+            <button class="follow-btn ${followedUsers.has(i) ? 'following' : ''}" onclick="toggleFollow(${i}, this)">
+                ${followedUsers.has(i) ? 'Following' : 'Follow'}
+            </button>
+        </div>
+    `).join('');
+}
+
+function renderProfileContent() {
+    const el = document.getElementById('profileContent');
+    // Show posts by default
+    el.innerHTML = '';
+    posts.slice(0, 3).forEach((post, i) => {
+        const postEl = document.createElement('div');
+        postEl.className = 'card post';
+        postEl.innerHTML = `
+            <div class="post-header">
+                <div class="post-avatar" style="background: ${currentUser.gradient};">${currentUser.initials}</div>
+                <div class="post-user-info">
+                    <div class="post-username">${currentUser.name}</div>
+                    <div class="post-meta"><span>Mar ${20 + i}, 2026</span></div>
+                </div>
+            </div>
+            <div class="post-body">Sample post from your profile feed. Sharing flights and memories with the Crosswinds community.</div>
+            <div class="post-media">
+                <div class="media-placeholder">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    Flight media
+                </div>
+            </div>
+            <div class="post-stats">
+                <span>${100 + i * 50} likes</span>
+                <span>${10 + i * 5} comments</span>
+            </div>
+        `;
+        el.appendChild(postEl);
+    });
+}
+
+// ===== INTERACTION HANDLERS =====
+function navigate(page) {
+    document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+    document.getElementById(`page-${page}`).classList.add('active');
+
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    const navLink = document.getElementById(`nav-${page}`);
+    if (navLink) navLink.classList.add('active');
+
+    // Close dropdowns
+    document.getElementById('notifDropdown').classList.remove('open');
+    document.getElementById('userMenu').classList.remove('open');
+
+    // Show/hide right panel based on page
+    const rp = document.getElementById('rightPanel');
+    if (page === 'messages' || page === 'settings') {
+        rp.style.display = 'none';
+    } else {
+        rp.style.display = '';
+    }
+
+    if (page === 'profile') renderProfileContent();
+}
+
+function toggleLike(index) {
+    if (likedPosts.has(index)) {
+        likedPosts.delete(index);
+        posts[index].likes--;
+    } else {
+        likedPosts.add(index);
+        posts[index].likes++;
+    }
+    renderFeed();
+}
+
+function toggleComments(index) {
+    const el = document.getElementById(`comments-${index}`);
+    el.classList.toggle('open');
+}
+
+function addComment(postIndex, inputEl) {
+    const text = inputEl.value.trim();
+    if (!text) return;
+    posts[postIndex].commentsList.push({
+        user: { name: currentUser.name, initials: currentUser.initials, gradient: currentUser.gradient },
+        text: text,
+        time: 'Just now'
+    });
+    posts[postIndex].comments++;
+    renderFeed();
+    // Re-open comments
+    document.getElementById(`comments-${postIndex}`).classList.add('open');
+}
+
+function sharePost(index) {
+    posts[index].shares++;
+    renderFeed();
+    showToast('Post shared to your profile!');
+}
+
+function toggleFollow(index, btn) {
+    if (followedUsers.has(index)) {
+        followedUsers.delete(index);
+        btn.textContent = 'Follow';
+        btn.classList.remove('following');
+    } else {
+        followedUsers.add(index);
+        btn.textContent = 'Following';
+        btn.classList.add('following');
+    }
+}
+
+function toggleNotifications() {
+    document.getElementById('notifDropdown').classList.toggle('open');
+    document.getElementById('userMenu').classList.remove('open');
+}
+
+function toggleUserMenu() {
+    document.getElementById('userMenu').classList.toggle('open');
+    document.getElementById('notifDropdown').classList.remove('open');
+}
+
+function markAllRead() {
+    document.querySelectorAll('.notif-item.unread').forEach(el => el.classList.remove('unread'));
+    document.querySelector('#notifBtn .badge').style.display = 'none';
+}
+
+function createPost() {
+    const input = document.getElementById('composerInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    posts.unshift({
+        user: { name: currentUser.name, handle: currentUser.handle, initials: currentUser.initials, gradient: currentUser.gradient, certs: currentUser.certs },
+        time: 'Just now',
+        text: text.replace(/#(\w+)/g, '<span class="hashtag">#$1</span>'),
+        mediaType: 'photo',
+        mediaLabel: 'Your shared content',
+        flight: null,
+        likes: 0, comments: 0, shares: 0,
+        commentsList: []
+    });
+
+    input.value = '';
+    renderFeed();
+    showToast('Post shared with the community!');
+}
+
+function openUploadModal() {
+    document.getElementById('uploadModal').classList.add('open');
+}
+
+function closeUploadModal() {
+    document.getElementById('uploadModal').classList.remove('open');
+}
+
+function handleFileSelect(input) {
+    const preview = document.getElementById('uploadPreview');
+    if (input.files.length > 0) {
+        preview.innerHTML = `<div style="padding:12px;background:var(--accent-dim);border-radius:var(--radius-sm);color:var(--accent);font-size:0.85rem;">${input.files.length} file(s) selected: ${Array.from(input.files).map(f => f.name).join(', ')}</div>`;
+    }
+}
+
+function submitUpload() {
+    const caption = document.getElementById('uploadCaption').value.trim();
+    const aircraft = document.getElementById('uploadAircraft').value.trim();
+    const location = document.getElementById('uploadLocation').value.trim();
+    const tags = document.getElementById('uploadTags').value.trim();
+    const type = document.getElementById('uploadType').value;
+
+    let text = caption || 'Shared new media';
+    if (tags) text += ' ' + tags.replace(/#(\w+)/g, '<span class="hashtag">#$1</span>');
+
+    posts.unshift({
+        user: { name: currentUser.name, handle: currentUser.handle, initials: currentUser.initials, gradient: currentUser.gradient, certs: currentUser.certs },
+        time: 'Just now',
+        text: text,
+        mediaType: type === 'video' || type === 'timelapse' ? 'video' : 'photo',
+        mediaLabel: caption || 'Uploaded media',
+        flight: aircraft || location ? { route: location || 'Local', aircraft: aircraft || 'Unknown' } : null,
+        likes: 0, comments: 0, shares: 0,
+        commentsList: []
+    });
+
+    closeUploadModal();
+    navigate('feed');
+    renderFeed();
+    showToast('Media uploaded successfully!');
+
+    // Reset form
+    document.getElementById('uploadCaption').value = '';
+    document.getElementById('uploadAircraft').value = '';
+    document.getElementById('uploadLocation').value = '';
+    document.getElementById('uploadTags').value = '';
+    document.getElementById('uploadAltitude').value = '';
+    document.getElementById('uploadPreview').innerHTML = '';
+}
+
+function switchProfileTab(btn, tab) {
+    document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+
+    const el = document.getElementById('profileContent');
+    if (tab === 'media') {
+        el.innerHTML = `
+            <div class="media-grid">
+                ${Array.from({length: 9}, (_, i) => `
+                    <div class="media-grid-item">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.3;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                        <div class="overlay">
+                            <span>❤ ${50 + i * 30}</span>
+                            <span>💬 ${5 + i * 3}</span>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    } else if (tab === 'flights') {
+        renderProfileContent();
+        el.innerHTML = '';
+        flightLogs.slice(0, 5).forEach(f => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.style.padding = '14px 20px';
+            card.style.marginBottom = '8px';
+            card.innerHTML = `
+                <div class="flight-log-entry">
+                    <div class="flight-icon-circle">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.4-.1.9.3 1.1l5.5 3.2-2.3 2.3-2.1-.6c-.4-.1-.8 0-1.1.3l-.1.1c-.3.3-.3.7-.1 1l1.9 2.4 2.4 1.9c.3.2.7.2 1-.1l.1-.1c.3-.3.4-.7.3-1.1l-.6-2.1 2.3-2.3 3.2 5.5c.2.4.7.5 1.1.3l.5-.3c.4-.2.6-.6.5-1.1z"/></svg>
+                    </div>
+                    <div class="flight-info">
+                        <div class="flight-route">${f.route}</div>
+                        <div class="flight-detail">${f.aircraft} • ${f.alt}</div>
+                    </div>
+                    <div class="flight-duration">
+                        <div class="time">${f.duration}</div>
+                        <div class="date">${f.date}</div>
+                    </div>
+                </div>
+            `;
+            el.appendChild(card);
+        });
+    } else {
+        renderProfileContent();
+    }
+}
+
+function viewUser(handle) {
+    const user = users.find(u => u.handle === handle);
+    if (!user) return;
+    navigate('profile');
+    // Update profile page for viewed user
+    document.querySelector('.profile-avatar-lg').textContent = user.initials;
+    document.querySelector('.profile-name').textContent = user.name;
+    document.querySelector('.profile-handle').textContent = user.handle;
+}
+
+function handleSearch(event) {
+    if (event.key === 'Enter') {
+        const query = event.target.value.trim().toLowerCase();
+        if (!query) return;
+        navigate('explore');
+        showToast(`Showing results for "${query}"`);
+    }
+}
+
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+        background: var(--accent); color: var(--sky-dark);
+        padding: 12px 24px; border-radius: 24px;
+        font-weight: 600; font-size: 0.9rem;
+        z-index: 9999; animation: fadeIn 0.3s ease;
+        box-shadow: var(--shadow-lg);
+    `;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+// Close dropdowns on outside click
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('#notifBtn') && !e.target.closest('#notifDropdown')) {
+        document.getElementById('notifDropdown').classList.remove('open');
+    }
+    if (!e.target.closest('#userAvatarBtn') && !e.target.closest('#userMenu')) {
+        document.getElementById('userMenu').classList.remove('open');
+    }
+});
+
+// Close modal on overlay click
+document.getElementById('uploadModal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('uploadModal')) closeUploadModal();
+});
+
+// ===== INIT =====
+renderFeed();
+renderExplore();
+renderMessages();
+renderGroups();
+renderFlightLog();
+renderSuggested();
+</script>
+
+</body>
+</html>
