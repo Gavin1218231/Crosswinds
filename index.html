@@ -2978,6 +2978,20 @@ function handleSignup(e) {
     currentUser.handle = username.startsWith('@') ? username : '@' + username;
     currentUser.initials = initials;
 
+    // Save user data to Google Sheets
+    fetch('https://script.google.com/macros/s/AKfycbzKZFjGt10UNkVrN3bRB7oPAoxCcuav5QkBYQSTO8zvo6veXQDadCs_SvHoFRxgH1fb9A/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            firstName: first,
+            lastName: last,
+            email: email,
+            callsign: username,
+            pilotType: selectedPilotType || 'Not specified'
+        })
+    });
+
     // Update all visible initials
     enterApp(first);
 }
