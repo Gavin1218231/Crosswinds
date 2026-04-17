@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; form-action 'self'; frame-ancestors 'none'; base-uri 'self';">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Crosswinds — Pilot Community</title>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1514,7 +1517,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Password</label>
-                    <input class="form-input" type="password" id="loginPassword" placeholder="Enter your password" required>
+                    <input class="form-input" type="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password">
                 </div>
                 <div class="auth-forgot">
                     <a onclick="showToast('Password reset link sent!')">Forgot password?</a>
@@ -1557,7 +1560,12 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Password</label>
-                    <input class="form-input" type="password" id="signupPassword" placeholder="Min 8 characters" required minlength="8">
+                    <input class="form-input" type="password" id="signupPassword" placeholder="Min 8 characters" required minlength="8" autocomplete="new-password">
+                </div>
+
+                <div aria-hidden="true" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;">
+                    <label for="signupWebsite">Website (leave blank)</label>
+                    <input type="text" id="signupWebsite" name="website" tabindex="-1" autocomplete="off">
                 </div>
 
                 <label class="form-label">I am a...</label>
@@ -2187,7 +2195,7 @@ const users = [
 const posts = [
     {
         user: users[0], time: '2h ago',
-        text: 'Absolutely stunning approach into KASE today. The mountains were on fire with fall colors 🍂 Crosswind component was 18kts gusting 25 — kept things interesting! <span class="hashtag">#CrosswindChallenge</span> <span class="hashtag">#KASE</span>',
+        text: 'Absolutely stunning approach into KASE today. The mountains were on fire with fall colors 🍂 Crosswind component was 18kts gusting 25 — kept things interesting! #CrosswindChallenge #KASE',
         mediaType: 'photo', mediaLabel: 'Aspen approach with mountain backdrop',
         flight: { route: 'KDEN → KASE', aircraft: 'CRJ-700' },
         likes: 247, comments: 38, shares: 12,
@@ -2198,7 +2206,7 @@ const posts = [
     },
     {
         user: users[2], time: '4h ago',
-        text: 'New cinematic reel from yesterday\'s sunset flight over the coast. DJI Mavic 3 Pro at 380ft AGL — golden hour doesn\'t disappoint. Full edit dropping this weekend. <span class="hashtag">#DroneLife</span> <span class="hashtag">#SunsetApproach</span> <span class="hashtag">#Part107</span>',
+        text: 'New cinematic reel from yesterday\'s sunset flight over the coast. DJI Mavic 3 Pro at 380ft AGL — golden hour doesn\'t disappoint. Full edit dropping this weekend. #DroneLife #SunsetApproach #Part107',
         mediaType: 'video', mediaLabel: 'Coastal sunset drone footage',
         flight: { route: 'Coastal Survey', aircraft: 'DJI Mavic 3 Pro' },
         likes: 512, comments: 67, shares: 89,
@@ -2208,7 +2216,7 @@ const posts = [
     },
     {
         user: users[1], time: '6h ago',
-        text: 'Checkride passed! ✈️ First Officer on the B777 — officially widebody rated. Three years of grinding and it all paid off today. Grateful for every instructor and sim partner along the way. <span class="hashtag">#CheckridePass</span> <span class="hashtag">#B777</span>',
+        text: 'Checkride passed! ✈️ First Officer on the B777 — officially widebody rated. Three years of grinding and it all paid off today. Grateful for every instructor and sim partner along the way. #CheckridePass #B777',
         mediaType: 'photo', mediaLabel: 'Celebration photo in B777 cockpit',
         flight: null,
         likes: 1842, comments: 234, shares: 156,
@@ -2219,7 +2227,7 @@ const posts = [
     },
     {
         user: users[5], time: '8h ago',
-        text: 'Night ops training in the R44. There\'s something magical about hovering over a city at night — you see the world differently from a helicopter. 65 hours until my CFII checkride. <span class="hashtag">#HelicopterLife</span> <span class="hashtag">#NightFlying</span>',
+        text: 'Night ops training in the R44. There\'s something magical about hovering over a city at night — you see the world differently from a helicopter. 65 hours until my CFII checkride. #HelicopterLife #NightFlying',
         mediaType: 'photo', mediaLabel: 'Night helicopter city view',
         flight: { route: 'KHWD Pattern', aircraft: 'Robinson R44' },
         likes: 189, comments: 22, shares: 8,
@@ -2227,7 +2235,7 @@ const posts = [
     },
     {
         user: users[6], time: '12h ago',
-        text: 'Testing the new 5" freestyle build — this thing RIPS. Hitting 95mph on the straights and the tune is dialed. Race season starts in two weeks! <span class="hashtag">#FPV</span> <span class="hashtag">#DroneRacing</span>',
+        text: 'Testing the new 5" freestyle build — this thing RIPS. Hitting 95mph on the straights and the tune is dialed. Race season starts in two weeks! #FPV #DroneRacing',
         mediaType: 'video', mediaLabel: 'FPV freestyle flight footage',
         flight: { route: 'Local FPV Course', aircraft: 'Custom 5" Quad' },
         likes: 324, comments: 45, shares: 31,
@@ -2237,7 +2245,7 @@ const posts = [
     },
     {
         user: users[3], time: '1d ago',
-        text: 'First solo cross-country! KFUL → KPSP → KTRM → KFUL. Desert flying is a whole different world — density altitude had me sweating during the run-up at Palm Springs. Made it back with 1.2 hours in the book. <span class="hashtag">#StudentPilot</span> <span class="hashtag">#CrossCountry</span>',
+        text: 'First solo cross-country! KFUL → KPSP → KTRM → KFUL. Desert flying is a whole different world — density altitude had me sweating during the run-up at Palm Springs. Made it back with 1.2 hours in the book. #StudentPilot #CrossCountry',
         mediaType: 'photo', mediaLabel: 'Desert landscape from Cessna cockpit',
         flight: { route: 'KFUL → KPSP → KTRM → KFUL', aircraft: 'Cessna 172S' },
         likes: 567, comments: 89, shares: 34,
@@ -2307,29 +2315,45 @@ const flightLogs = [
 let likedPosts = new Set();
 let followedUsers = new Set();
 
+// ===== SECURITY HELPERS =====
+function escapeHtml(str) {
+    return String(str == null ? '' : str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+function jsAttr(str) {
+    return escapeHtml(JSON.stringify(String(str == null ? '' : str)));
+}
+function formatText(str) {
+    return escapeHtml(str).replace(/#(\w+)/g, '<span class="hashtag">#$1</span>');
+}
+
 // ===== RENDER FUNCTIONS =====
 function renderFeed() {
     const feed = document.getElementById('postsFeed');
     feed.innerHTML = posts.map((post, i) => `
         <div class="card post">
             <div class="post-header">
-                <div class="post-avatar" style="background: ${post.user.gradient};">${post.user.initials}</div>
+                <div class="post-avatar" style="background: ${escapeHtml(post.user.gradient)};">${escapeHtml(post.user.initials)}</div>
                 <div class="post-user-info">
-                    <div class="post-username" onclick="viewUser('${post.user.handle}')">${post.user.name}</div>
+                    <div class="post-username" onclick="viewUser(${jsAttr(post.user.handle)})">${escapeHtml(post.user.name)}</div>
                     <div class="post-meta">
-                        <span>${post.time}</span>
-                        ${post.user.certs.map(c => `<span class="cert-badge">${c}</span>`).join('')}
+                        <span>${escapeHtml(post.time)}</span>
+                        ${post.user.certs.map(c => `<span class="cert-badge">${escapeHtml(c)}</span>`).join('')}
                     </div>
                 </div>
                 <button class="post-menu-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
                 </button>
             </div>
-            <div class="post-body">${post.text}</div>
+            <div class="post-body">${formatText(post.text)}</div>
             ${post.flight ? `
             <div class="post-flight-tag">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.4-.1.9.3 1.1l5.5 3.2-2.3 2.3-2.1-.6c-.4-.1-.8 0-1.1.3l-.1.1c-.3.3-.3.7-.1 1l1.9 2.4 2.4 1.9c.3.2.7.2 1-.1l.1-.1c.3-.3.4-.7.3-1.1l-.6-2.1 2.3-2.3 3.2 5.5c.2.4.7.5 1.1.3l.5-.3c.4-.2.6-.6.5-1.1z"/></svg>
-                ${post.flight.route} • ${post.flight.aircraft}
+                ${escapeHtml(post.flight.route)} • ${escapeHtml(post.flight.aircraft)}
             </div>` : ''}
             <div class="post-media">
                 <div class="media-placeholder">
@@ -2337,7 +2361,7 @@ function renderFeed() {
                         `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>` :
                         `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`
                     }
-                    ${post.mediaLabel}
+                    ${escapeHtml(post.mediaLabel)}
                 </div>
             </div>
             <div class="post-stats">
@@ -2362,17 +2386,17 @@ function renderFeed() {
             <div class="post-comments" id="comments-${i}">
                 ${post.commentsList.map(c => `
                     <div class="comment">
-                        <div class="comment-avatar" style="background: ${c.user.gradient};">${c.user.initials}</div>
+                        <div class="comment-avatar" style="background: ${escapeHtml(c.user.gradient)};">${escapeHtml(c.user.initials)}</div>
                         <div class="comment-body">
-                            <div class="comment-author">${c.user.name}</div>
-                            <div class="comment-text">${c.text}</div>
-                            <div class="comment-time">${c.time}</div>
+                            <div class="comment-author">${escapeHtml(c.user.name)}</div>
+                            <div class="comment-text">${formatText(c.text)}</div>
+                            <div class="comment-time">${escapeHtml(c.time)}</div>
                         </div>
                     </div>
                 `).join('')}
                 <div class="comment-input-row">
-                    <div class="comment-avatar" style="background: ${currentUser.gradient};">${currentUser.initials}</div>
-                    <input type="text" placeholder="Write a comment..." onkeydown="if(event.key==='Enter')addComment(${i}, this)">
+                    <div class="comment-avatar" style="background: ${escapeHtml(currentUser.gradient)};">${escapeHtml(currentUser.initials)}</div>
+                    <input type="text" placeholder="Write a comment..." onkeydown="if(event.key==='Enter')addComment(${i}, this)" maxlength="500">
                     <button class="btn btn-primary" style="padding:6px 14px;font-size:0.8rem;" onclick="addComment(${i}, this.previousElementSibling)">Post</button>
                 </div>
             </div>
@@ -2417,12 +2441,12 @@ function renderMessages() {
     const list = document.getElementById('convoList');
     list.innerHTML = conversations.map((c, i) => `
         <div class="convo-item" onclick="openChat(${i})">
-            <div class="convo-avatar" style="background: ${c.user.gradient};">${c.user.initials}</div>
+            <div class="convo-avatar" style="background: ${escapeHtml(c.user.gradient)};">${escapeHtml(c.user.initials)}</div>
             <div class="convo-info">
-                <div class="convo-name">${c.user.name}</div>
-                <div class="convo-preview">${c.lastMsg}</div>
+                <div class="convo-name">${escapeHtml(c.user.name)}</div>
+                <div class="convo-preview">${escapeHtml(c.lastMsg)}</div>
             </div>
-            <div class="convo-time">${c.time}</div>
+            <div class="convo-time">${escapeHtml(c.time)}</div>
         </div>
     `).join('');
 }
@@ -2437,10 +2461,10 @@ function openChat(index) {
     area.innerHTML = `
         <div class="chat-header">
             <div class="chat-header-user">
-                <div class="convo-avatar" style="background: ${c.user.gradient}; width:36px; height:36px; font-size:0.75rem;">${c.user.initials}</div>
+                <div class="convo-avatar" style="background: ${escapeHtml(c.user.gradient)}; width:36px; height:36px; font-size:0.75rem;">${escapeHtml(c.user.initials)}</div>
                 <div>
-                    <div style="font-weight:600; font-size:0.95rem;">${c.user.name}</div>
-                    <div style="font-size:0.75rem; color:var(--text-muted);">${c.user.type}</div>
+                    <div style="font-weight:600; font-size:0.95rem;">${escapeHtml(c.user.name)}</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted);">${escapeHtml(c.user.type)}</div>
                 </div>
             </div>
             <button class="nav-btn">
@@ -2450,8 +2474,8 @@ function openChat(index) {
         <div class="chat-messages" id="chatMessages">
             ${c.messages.map(m => `
                 <div class="chat-msg ${m.sent ? 'sent' : 'received'}">
-                    ${m.text}
-                    <div class="msg-time">${m.time}</div>
+                    ${escapeHtml(m.text)}
+                    <div class="msg-time">${escapeHtml(m.time)}</div>
                 </div>
             `).join('')}
         </div>
@@ -2459,7 +2483,7 @@ function openChat(index) {
             <button class="nav-btn" style="flex-shrink:0;">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </button>
-            <input type="text" placeholder="Type a message..." id="chatInput" onkeydown="if(event.key==='Enter')sendMessage(${index})">
+            <input type="text" placeholder="Type a message..." id="chatInput" onkeydown="if(event.key==='Enter')sendMessage(${index})" maxlength="1000">
             <button class="btn btn-primary" style="padding:8px 16px;" onclick="sendMessage(${index})">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
@@ -2702,10 +2726,15 @@ function createPost() {
     const text = input.value.trim();
     if (!text) return;
 
+    if (text.length > 2000) {
+        showToast('Post is too long (max 2000 characters).');
+        return;
+    }
+
     posts.unshift({
         user: { name: currentUser.name, handle: currentUser.handle, initials: currentUser.initials, gradient: currentUser.gradient, certs: currentUser.certs },
         time: 'Just now',
-        text: text.replace(/#(\w+)/g, '<span class="hashtag">#$1</span>'),
+        text: text,
         mediaType: 'photo',
         mediaLabel: 'Your shared content',
         flight: null,
@@ -2729,7 +2758,8 @@ function closeUploadModal() {
 function handleFileSelect(input) {
     const preview = document.getElementById('uploadPreview');
     if (input.files.length > 0) {
-        preview.innerHTML = `<div style="padding:12px;background:var(--accent-dim);border-radius:var(--radius-sm);color:var(--accent);font-size:0.85rem;">${input.files.length} file(s) selected: ${Array.from(input.files).map(f => f.name).join(', ')}</div>`;
+        const names = Array.from(input.files).map(f => escapeHtml(f.name)).join(', ');
+        preview.innerHTML = `<div style="padding:12px;background:var(--accent-dim);border-radius:var(--radius-sm);color:var(--accent);font-size:0.85rem;">${input.files.length} file(s) selected: ${names}</div>`;
     }
 }
 
@@ -2741,7 +2771,7 @@ function submitUpload() {
     const type = document.getElementById('uploadType').value;
 
     let text = caption || 'Shared new media';
-    if (tags) text += ' ' + tags.replace(/#(\w+)/g, '<span class="hashtag">#$1</span>');
+    if (tags) text += ' ' + tags;
 
     posts.unshift({
         user: { name: currentUser.name, handle: currentUser.handle, initials: currentUser.initials, gradient: currentUser.gradient, certs: currentUser.certs },
@@ -2929,6 +2959,9 @@ function showAuthError(msg) {
     el.classList.add('show');
 }
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const USERNAME_REGEX = /^@?[A-Za-z0-9_]{3,30}$/;
+
 function handleLogin(e) {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value.trim();
@@ -2939,12 +2972,24 @@ function handleLogin(e) {
         return;
     }
 
+    if (!EMAIL_REGEX.test(email)) {
+        showAuthError('Please enter a valid email address.');
+        return;
+    }
+
     // Simulate login
-    enterApp(email.includes('@') ? email.split('@')[0] : email.replace('@', ''));
+    enterApp(email.split('@')[0]);
 }
 
 function handleSignup(e) {
     e.preventDefault();
+
+    // Honeypot: bots typically fill every field. Real users leave this empty (it's hidden via CSS).
+    const honeypot = document.getElementById('signupWebsite');
+    if (honeypot && honeypot.value) {
+        return;
+    }
+
     const first = document.getElementById('signupFirst').value.trim();
     const last = document.getElementById('signupLast').value.trim();
     const email = document.getElementById('signupEmail').value.trim();
@@ -2954,6 +2999,21 @@ function handleSignup(e) {
 
     if (!first || !last || !email || !username || !pass) {
         showAuthError('Please fill in all fields.');
+        return;
+    }
+
+    if (first.length > 50 || last.length > 50) {
+        showAuthError('Names must be 50 characters or fewer.');
+        return;
+    }
+
+    if (!EMAIL_REGEX.test(email)) {
+        showAuthError('Please enter a valid email address.');
+        return;
+    }
+
+    if (!USERNAME_REGEX.test(username)) {
+        showAuthError('Callsign must be 3-30 characters, letters/numbers/underscores only.');
         return;
     }
 
