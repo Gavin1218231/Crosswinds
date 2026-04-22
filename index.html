@@ -1651,35 +1651,35 @@
         <span>Notifications</span>
         <button class="btn btn-ghost" style="font-size: 0.78rem;" onclick="markAllRead()">Mark all read</button>
     </div>
-    <div class="notif-item unread">
+    <div class="notif-item unread" onclick="viewUser('@skycapt_ava')" style="cursor:pointer;">
         <div class="notif-avatar" style="background: linear-gradient(135deg, #06d6a0, #48cae4);">SC</div>
         <div>
             <div class="notif-text"><strong>SkyCapt_Ava</strong> liked your sunset approach photo</div>
             <div class="notif-time">12 minutes ago</div>
         </div>
     </div>
-    <div class="notif-item unread">
+    <div class="notif-item unread" onclick="navigate('feed')" style="cursor:pointer;">
         <div class="notif-avatar" style="background: linear-gradient(135deg, #f77f00, #fcbf49);">JW</div>
         <div>
             <div class="notif-text"><strong>JetWash_Mike</strong> commented on your post: "Incredible crosswind landing!"</div>
             <div class="notif-time">38 minutes ago</div>
         </div>
     </div>
-    <div class="notif-item unread">
+    <div class="notif-item unread" onclick="viewUser('@dronepilotx')" style="cursor:pointer;">
         <div class="notif-avatar" style="background: linear-gradient(135deg, #e63946, #f77f00);">DP</div>
         <div>
             <div class="notif-text"><strong>DronePilotX</strong> started following you</div>
             <div class="notif-time">1 hour ago</div>
         </div>
     </div>
-    <div class="notif-item unread">
+    <div class="notif-item unread" onclick="navigate('groups')" style="cursor:pointer;">
         <div class="notif-avatar" style="background: linear-gradient(135deg, #48cae4, #06d6a0);">CW</div>
         <div>
             <div class="notif-text">You were mentioned in <strong>Crosswind Landing Crew</strong></div>
             <div class="notif-time">2 hours ago</div>
         </div>
     </div>
-    <div class="notif-item">
+    <div class="notif-item" onclick="navigate('flightlog')" style="cursor:pointer;">
         <div class="notif-avatar" style="background: linear-gradient(135deg, #8d99ae, #2a5f8f);">TF</div>
         <div>
             <div class="notif-text"><strong>TailwindFlyer</strong> shared your flight log from KJFK → KLAX</div>
@@ -1787,11 +1787,11 @@
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
                                     Video
                                 </button>
-                                <button class="composer-tool-btn">
+                                <button class="composer-tool-btn" onclick="addLocationToComposer()">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                                     Location
                                 </button>
-                                <button class="composer-tool-btn">
+                                <button class="composer-tool-btn" onclick="addFlightToComposer()">
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
                                     Flight
                                 </button>
@@ -1841,7 +1841,7 @@
         <div class="page-view" id="page-groups">
             <div class="page-header">
                 <h2>Groups</h2>
-                <button class="btn btn-primary" onclick="showToast('Group creation coming soon!')">+ Create Group</button>
+                <button class="btn btn-primary" onclick="createGroup()">+ Create Group</button>
             </div>
             <div class="groups-grid" id="groupsGrid"></div>
         </div>
@@ -1913,19 +1913,19 @@
                     <h3>Profile</h3>
                     <div class="form-group">
                         <label class="form-label">Display Name</label>
-                        <input class="form-input" type="text" value="Maverick Reynolds">
+                        <input class="form-input" type="text" id="settingsName" value="Maverick Reynolds">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Username</label>
-                        <input class="form-input" type="text" value="@maverick_flies">
+                        <input class="form-input" type="text" id="settingsHandle" value="@maverick_flies">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Bio</label>
-                        <textarea class="form-textarea">ATP-rated pilot & Part 107 drone operator. Chasing sunsets from FL350 and capturing them from 400ft AGL. Based at KJFK.</textarea>
+                        <textarea class="form-textarea" id="settingsBio">ATP-rated pilot & Part 107 drone operator. Chasing sunsets from FL350 and capturing them from 400ft AGL. Based at KJFK.</textarea>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Home Airport (ICAO)</label>
-                        <input class="form-input" type="text" value="KJFK">
+                        <input class="form-input" type="text" id="settingsAirport" value="KJFK">
                     </div>
                     <div class="form-row">
                         <div class="form-group">
@@ -1942,19 +1942,14 @@
                             <input class="form-input" type="number" value="4200">
                         </div>
                     </div>
-                    <button class="btn btn-primary" onclick="showToast('Profile saved!')">Save Profile</button>
+                    <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
                 </div>
             </div>
 
             <div class="card">
                 <div class="settings-section">
                     <h3>Certifications</h3>
-                    <div class="profile-certs" style="margin-top:0; margin-bottom:12px;">
-                        <span class="cert-tag">ATP ✕</span>
-                        <span class="cert-tag">Part 107 ✕</span>
-                        <span class="cert-tag">CFI ✕</span>
-                        <span class="cert-tag">B737 Type Rating ✕</span>
-                    </div>
+                    <div class="profile-certs" id="settingsCerts" style="margin-top:0; margin-bottom:12px;"></div>
                     <div class="form-row">
                         <input class="form-input" type="text" placeholder="Add certification..." id="newCertInput">
                         <button class="btn btn-secondary" onclick="addCert()">Add</button>
@@ -2075,23 +2070,23 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
                 Trending
             </div>
-            <div class="trending-item">
+            <div class="trending-item" onclick="filterByHashtag('CrosswindChallenge')">
                 <div class="trending-tag">#CrosswindChallenge</div>
                 <div class="trending-count">1,247 posts</div>
             </div>
-            <div class="trending-item">
+            <div class="trending-item" onclick="filterByHashtag('SunsetApproach')">
                 <div class="trending-tag">#SunsetApproach</div>
                 <div class="trending-count">892 posts</div>
             </div>
-            <div class="trending-item">
+            <div class="trending-item" onclick="filterByHashtag('DroneLife')">
                 <div class="trending-tag">#DroneLife</div>
                 <div class="trending-count">634 posts</div>
             </div>
-            <div class="trending-item">
+            <div class="trending-item" onclick="filterByHashtag('Part107')">
                 <div class="trending-tag">#Part107</div>
                 <div class="trending-count">421 posts</div>
             </div>
-            <div class="trending-item">
+            <div class="trending-item" onclick="filterByHashtag('CheckridePass')">
                 <div class="trending-tag">#CheckridePass</div>
                 <div class="trending-count">318 posts</div>
             </div>
@@ -2328,13 +2323,21 @@ function jsAttr(str) {
     return escapeHtml(JSON.stringify(String(str == null ? '' : str)));
 }
 function formatText(str) {
-    return escapeHtml(str).replace(/#(\w+)/g, '<span class="hashtag">#$1</span>');
+    return escapeHtml(str).replace(/#(\w+)/g, '<span class="hashtag" onclick="filterByHashtag(\'$1\')" style="cursor:pointer;">#$1</span>');
 }
 
 // ===== RENDER FUNCTIONS =====
 function renderFeed() {
     const feed = document.getElementById('postsFeed');
-    feed.innerHTML = posts.map((post, i) => `
+    const filtered = getFilteredPosts();
+    const filterBanner = activeFilter ? `
+        <div class="card" style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;margin-bottom:8px;">
+            <span>Showing posts matching <strong>${escapeHtml(activeFilter.startsWith('#') ? activeFilter : '#' + activeFilter)}</strong></span>
+            <button class="btn btn-secondary" style="padding:4px 14px;font-size:0.8rem;" onclick="clearFilter()">Clear</button>
+        </div>` : '';
+    feed.innerHTML = filterBanner + filtered.map((post) => {
+    const i = posts.indexOf(post);
+    return `
         <div class="card post">
             <div class="post-header">
                 <div class="post-avatar" style="background: ${escapeHtml(post.user.gradient)};">${escapeHtml(post.user.initials)}</div>
@@ -2401,7 +2404,7 @@ function renderFeed() {
                 </div>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 function renderExplore() {
@@ -2420,8 +2423,11 @@ function renderExplore() {
         { title: 'Autorotation Practice', user: 'RotorHead Dan', type: 'Video' },
         { title: 'METAR Decoded', user: 'TailwindFlyer', type: 'Article' },
     ];
-    grid.innerHTML = exploreItems.map(item => `
-        <div class="explore-card">
+    grid.innerHTML = exploreItems.map(item => {
+        const matchedUser = users.find(u => u.name === item.user);
+        const clickHandler = matchedUser ? `onclick="viewUser(${jsAttr(matchedUser.handle)})"` : '';
+        return `
+        <div class="explore-card" ${clickHandler} style="cursor:pointer;">
             <div class="explore-card-media">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.3;">
                     ${item.type === 'Video' ? '<polygon points="5 3 19 12 5 21 5 3"/>' :
@@ -2430,11 +2436,11 @@ function renderExplore() {
                 </svg>
             </div>
             <div class="explore-card-info">
-                <h4>${item.title}</h4>
-                <p>${item.user} • ${item.type}</p>
+                <h4>${escapeHtml(item.title)}</h4>
+                <p>${escapeHtml(item.user)} &bull; ${escapeHtml(item.type)}</p>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 function renderMessages() {
@@ -2525,20 +2531,48 @@ function sendMessage(convoIndex) {
     }, 2000);
 }
 
+let joinedGroups = new Set();
+
 function renderGroups() {
     const grid = document.getElementById('groupsGrid');
-    grid.innerHTML = groups.map(g => `
+    grid.innerHTML = groups.map((g, i) => `
         <div class="group-card">
-            <div class="group-banner" style="background: ${g.color};">
+            <div class="group-banner" style="background: ${escapeHtml(g.color)};">
                 <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
             <div class="group-info">
-                <div class="group-name">${g.name}</div>
-                <div class="group-desc">${g.desc}</div>
-                <div class="group-members">${g.members}</div>
+                <div class="group-name">${escapeHtml(g.name)}</div>
+                <div class="group-desc">${escapeHtml(g.desc)}</div>
+                <div class="group-members">${escapeHtml(g.members)}</div>
+                <button class="btn ${joinedGroups.has(i) ? 'btn-secondary' : 'btn-primary'}" style="margin-top:8px;padding:6px 16px;font-size:0.8rem;" onclick="toggleGroup(${i})">
+                    ${joinedGroups.has(i) ? 'Leave Group' : 'Join Group'}
+                </button>
             </div>
         </div>
     `).join('');
+}
+
+function toggleGroup(index) {
+    if (joinedGroups.has(index)) {
+        joinedGroups.delete(index);
+        showToast('Left ' + groups[index].name);
+    } else {
+        joinedGroups.add(index);
+        showToast('Joined ' + groups[index].name + '!');
+    }
+    renderGroups();
+}
+
+function createGroup() {
+    const name = prompt('Enter group name:');
+    if (!name || !name.trim()) return;
+    const desc = prompt('Enter a short description:');
+    const colors = ['#00b4d8,#0077b6','#f77f00,#e63946','#48cae4,#06d6a0','#9b59b6,#3498db','#e74c3c,#f39c12'];
+    const color = 'linear-gradient(135deg, ' + colors[Math.floor(Math.random() * colors.length)] + ')';
+    groups.push({ name: name.trim(), desc: (desc || '').trim() || 'A new community group.', members: '1 member', color });
+    joinedGroups.add(groups.length - 1);
+    renderGroups();
+    showToast('Group "' + name.trim() + '" created!');
 }
 
 function renderFlightLog() {
@@ -2603,35 +2637,64 @@ function renderSuggested() {
     `).join('');
 }
 
-function renderProfileContent() {
+function renderProfileContent(tab) {
     const el = document.getElementById('profileContent');
-    // Show posts by default
-    el.innerHTML = '';
-    posts.slice(0, 3).forEach((post, i) => {
-        const postEl = document.createElement('div');
-        postEl.className = 'card post';
-        postEl.innerHTML = `
-            <div class="post-header">
-                <div class="post-avatar" style="background: ${currentUser.gradient};">${currentUser.initials}</div>
-                <div class="post-user-info">
-                    <div class="post-username">${currentUser.name}</div>
-                    <div class="post-meta"><span>Mar ${20 + i}, 2026</span></div>
+    tab = tab || 'posts';
+
+    if (tab === 'posts') {
+        const userPosts = posts.filter(p => p.user.handle === currentUser.handle || p.user.name === currentUser.name);
+        if (userPosts.length === 0) {
+            el.innerHTML = '<div class="card" style="text-align:center;padding:40px 20px;color:var(--text-muted);">No posts yet. Share your first flight!</div>';
+            return;
+        }
+        el.innerHTML = '';
+        userPosts.forEach(post => {
+            const postEl = document.createElement('div');
+            postEl.className = 'card post';
+            postEl.innerHTML = `
+                <div class="post-header">
+                    <div class="post-avatar" style="background: ${escapeHtml(post.user.gradient)};">${escapeHtml(post.user.initials)}</div>
+                    <div class="post-user-info">
+                        <div class="post-username">${escapeHtml(post.user.name)}</div>
+                        <div class="post-meta"><span>${escapeHtml(post.time)}</span></div>
+                    </div>
                 </div>
-            </div>
-            <div class="post-body">Sample post from your profile feed. Sharing flights and memories with the Crosswinds community.</div>
-            <div class="post-media">
-                <div class="media-placeholder">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    Flight media
+                <div class="post-body">${formatText(post.text)}</div>
+                <div class="post-stats">
+                    <span>${post.likes} likes</span>
+                    <span>${post.comments} comments</span>
+                    <span>${post.shares} shares</span>
                 </div>
-            </div>
-            <div class="post-stats">
-                <span>${100 + i * 50} likes</span>
-                <span>${10 + i * 5} comments</span>
-            </div>
-        `;
-        el.appendChild(postEl);
-    });
+            `;
+            el.appendChild(postEl);
+        });
+    } else if (tab === 'likes') {
+        const liked = posts.filter((_, i) => likedPosts.has(i));
+        if (liked.length === 0) {
+            el.innerHTML = '<div class="card" style="text-align:center;padding:40px 20px;color:var(--text-muted);">No liked posts yet.</div>';
+            return;
+        }
+        el.innerHTML = '';
+        liked.forEach(post => {
+            const postEl = document.createElement('div');
+            postEl.className = 'card post';
+            postEl.innerHTML = `
+                <div class="post-header">
+                    <div class="post-avatar" style="background: ${escapeHtml(post.user.gradient)};">${escapeHtml(post.user.initials)}</div>
+                    <div class="post-user-info">
+                        <div class="post-username" onclick="viewUser(${jsAttr(post.user.handle)})">${escapeHtml(post.user.name)}</div>
+                        <div class="post-meta"><span>${escapeHtml(post.time)}</span></div>
+                    </div>
+                </div>
+                <div class="post-body">${formatText(post.text)}</div>
+                <div class="post-stats">
+                    <span>${post.likes} likes</span>
+                    <span>${post.comments} comments</span>
+                </div>
+            `;
+            el.appendChild(postEl);
+        });
+    }
 }
 
 // ===== INTERACTION HANDLERS =====
@@ -2656,6 +2719,7 @@ function navigate(page) {
     }
 
     if (page === 'profile') renderProfileContent();
+    if (page === 'settings') renderSettingsCerts();
 }
 
 function toggleLike(index) {
@@ -2841,8 +2905,10 @@ function switchProfileTab(btn, tab) {
             `;
             el.appendChild(card);
         });
+    } else if (tab === 'likes') {
+        renderProfileContent('likes');
     } else {
-        renderProfileContent();
+        renderProfileContent('posts');
     }
 }
 
@@ -2891,12 +2957,43 @@ function viewUser(handle) {
     }
 }
 
+let activeFilter = null;
+
+function filterByHashtag(tag) {
+    activeFilter = tag.toLowerCase();
+    navigate('feed');
+    renderFeed();
+    document.getElementById('globalSearch').value = '#' + tag;
+    showToast(`Showing posts with #${escapeHtml(tag)}`);
+}
+
+function clearFilter() {
+    activeFilter = null;
+    document.getElementById('globalSearch').value = '';
+    renderFeed();
+}
+
 function handleSearch(event) {
     if (event.key === 'Enter') {
-        const query = event.target.value.trim().toLowerCase();
-        if (!query) return;
-        navigate('explore');
-        showToast(`Showing results for "${query}"`);
+        const query = event.target.value.trim();
+        if (!query) {
+            clearFilter();
+            return;
+        }
+        if (query.startsWith('#')) {
+            filterByHashtag(query.slice(1));
+            return;
+        }
+        const q = query.toLowerCase();
+        const matchedUser = users.find(u => u.name.toLowerCase().includes(q) || u.handle.toLowerCase().includes(q));
+        if (matchedUser) {
+            viewUser(matchedUser.handle);
+            return;
+        }
+        activeFilter = q;
+        navigate('feed');
+        renderFeed();
+        showToast(`Showing results for "${escapeHtml(query)}"`);
     }
 }
 
@@ -3104,15 +3201,80 @@ function addCert() {
     const input = document.getElementById('newCertInput');
     const val = input.value.trim();
     if (!val) return;
-    currentUser.certs.push(val);
-    const container = document.querySelector('#page-settings .profile-certs');
-    if (container) {
-        container.innerHTML = currentUser.certs.map(c =>
-            `<span class="cert-tag">${c} ✕</span>`
-        ).join('');
+    if (currentUser.certs.includes(val)) {
+        showToast('Certification already added.');
+        return;
     }
+    currentUser.certs.push(val);
+    renderSettingsCerts();
     input.value = '';
     showToast('Certification added!');
+}
+
+function removeCert(index) {
+    currentUser.certs.splice(index, 1);
+    renderSettingsCerts();
+    showToast('Certification removed.');
+}
+
+function renderSettingsCerts() {
+    const container = document.getElementById('settingsCerts');
+    if (!container) return;
+    container.innerHTML = currentUser.certs.map((c, i) =>
+        `<span class="cert-tag" style="cursor:pointer;" onclick="removeCert(${i})">${escapeHtml(c)} ✕</span>`
+    ).join('');
+}
+
+function saveProfile() {
+    const name = document.getElementById('settingsName').value.trim();
+    const handle = document.getElementById('settingsHandle').value.trim();
+    const bio = document.getElementById('settingsBio').value.trim();
+    const airport = document.getElementById('settingsAirport').value.trim().toUpperCase();
+
+    if (!name || !handle) {
+        showToast('Name and username are required.');
+        return;
+    }
+
+    currentUser.name = name;
+    currentUser.handle = handle.startsWith('@') ? handle : '@' + handle;
+    currentUser.initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    currentUser.airport = airport;
+
+    document.querySelector('.profile-name').textContent = currentUser.name;
+    document.querySelector('.profile-handle').textContent = currentUser.handle;
+    document.querySelector('.profile-bio').textContent = bio;
+    refreshUserUI();
+    showToast('Profile saved!');
+}
+
+function addLocationToComposer() {
+    const loc = prompt('Enter a location or airport code (e.g. KJFK, Grand Canyon):');
+    if (loc && loc.trim()) {
+        const input = document.getElementById('composerInput');
+        input.value = input.value + (input.value ? ' ' : '') + '📍 ' + loc.trim();
+        input.focus();
+    }
+}
+
+function addFlightToComposer() {
+    const route = prompt('Enter flight route (e.g. KJFK → KLAX):');
+    if (route && route.trim()) {
+        const input = document.getElementById('composerInput');
+        input.value = input.value + (input.value ? ' ' : '') + '✈️ ' + route.trim();
+        input.focus();
+    }
+}
+
+function getFilteredPosts() {
+    if (!activeFilter) return posts;
+    const q = activeFilter.toLowerCase();
+    return posts.filter(p =>
+        p.text.toLowerCase().includes('#' + q) ||
+        p.text.toLowerCase().includes(q) ||
+        p.user.name.toLowerCase().includes(q) ||
+        p.user.handle.toLowerCase().includes(q)
+    );
 }
 
 // ===== INIT =====
@@ -3122,6 +3284,7 @@ renderMessages();
 renderGroups();
 renderFlightLog();
 renderSuggested();
+renderSettingsCerts();
 </script>
 
 </body>
