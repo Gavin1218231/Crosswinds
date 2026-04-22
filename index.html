@@ -1439,7 +1439,7 @@
 
         .pilot-type-select {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 10px;
             margin-bottom: 18px;
         }
@@ -1568,7 +1568,7 @@
                     <input type="text" id="signupWebsite" name="website" tabindex="-1" autocomplete="off">
                 </div>
 
-                <label class="form-label">I am a...</label>
+                <label class="form-label">I'm interested in...</label>
                 <div class="pilot-type-select" id="pilotTypeSelect">
                     <div class="pilot-type-option" onclick="selectPilotType(this, 'airline')">
                         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.4-.1.9.3 1.1l5.5 3.2-2.3 2.3-2.1-.6c-.4-.1-.8 0-1.1.3l-.1.1c-.3.3-.3.7-.1 1l1.9 2.4 2.4 1.9c.3.2.7.2 1-.1l.1-.1c.3-.3.4-.7.3-1.1l-.6-2.1 2.3-2.3 3.2 5.5c.2.4.7.5 1.1.3l.5-.3c.4-.2.6-.6.5-1.1z"/></svg>
@@ -1582,10 +1582,22 @@
                         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                         <span>Drone / UAS</span>
                     </div>
+                    <div class="pilot-type-option" onclick="selectPilotType(this, 'enthusiast')">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                        <span>Aviation Enthusiast</span>
+                    </div>
                     <div class="pilot-type-option" onclick="selectPilotType(this, 'student')">
                         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                        <span>Student Pilot</span>
+                        <span>Student / Learning</span>
                     </div>
+                    <div class="pilot-type-option" onclick="selectPilotType(this, 'other')">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        <span>Other</span>
+                    </div>
+                </div>
+                <div class="form-group" id="customTypeGroup" style="display:none;">
+                    <label class="form-label">Tell us more</label>
+                    <input class="form-input" type="text" id="customTypeInput" placeholder="e.g. Mechanic, ATC, Photographer, Sim Pilot..." maxlength="50">
                 </div>
 
                 <div class="auth-checkbox">
@@ -3048,6 +3060,10 @@ function selectPilotType(el, type) {
     document.querySelectorAll('.pilot-type-option').forEach(o => o.classList.remove('selected'));
     el.classList.add('selected');
     selectedPilotType = type;
+    const customGroup = document.getElementById('customTypeGroup');
+    if (customGroup) {
+        customGroup.style.display = type === 'other' ? '' : 'none';
+    }
 }
 
 function showAuthError(msg) {
@@ -3125,8 +3141,18 @@ function handleSignup(e) {
     }
 
     if (!selectedPilotType) {
-        showAuthError('Please select your pilot type.');
+        showAuthError('Please select what you\'re interested in.');
         return;
+    }
+
+    let interestType = selectedPilotType;
+    if (selectedPilotType === 'other') {
+        const customType = document.getElementById('customTypeInput').value.trim();
+        if (!customType) {
+            showAuthError('Please tell us a bit about your interest.');
+            return;
+        }
+        interestType = 'Other: ' + customType;
     }
 
     // Update the current user with signup info
@@ -3145,7 +3171,7 @@ function handleSignup(e) {
             lastName: last,
             email: email,
             callsign: username,
-            pilotType: selectedPilotType || 'Not specified'
+            pilotType: interestType
         })
     });
 
@@ -3195,6 +3221,8 @@ function logout() {
     document.getElementById('authError').classList.remove('show');
     selectedPilotType = null;
     document.querySelectorAll('.pilot-type-option').forEach(o => o.classList.remove('selected'));
+    var customGroup = document.getElementById('customTypeGroup');
+    if (customGroup) customGroup.style.display = 'none';
 }
 
 function addCert() {
