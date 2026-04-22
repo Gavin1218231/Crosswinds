@@ -11,29 +11,29 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --sky-dark: #0a1628;
-            --sky-mid: #122240;
-            --sky-light: #1a3358;
-            --horizon: #2a5f8f;
-            --accent: #00b4d8;
-            --accent-glow: #48cae4;
-            --accent-dim: rgba(0,180,216,0.15);
-            --sunset: #f77f00;
-            --sunset-light: #fcbf49;
-            --danger: #e63946;
-            --success: #06d6a0;
-            --text-primary: #edf2f4;
-            --text-secondary: #8d99ae;
-            --text-muted: #5a6a80;
-            --card-bg: rgba(18, 34, 64, 0.85);
-            --card-border: rgba(0,180,216,0.12);
-            --glass: rgba(10, 22, 40, 0.92);
-            --input-bg: rgba(26, 51, 88, 0.6);
+            --sky-dark: #f0f4f8;
+            --sky-mid: #e2e8f0;
+            --sky-light: #cbd5e1;
+            --horizon: #94a3b8;
+            --accent: #0284c7;
+            --accent-glow: #38bdf8;
+            --accent-dim: rgba(2,132,199,0.1);
+            --sunset: #ea580c;
+            --sunset-light: #fb923c;
+            --danger: #dc2626;
+            --success: #16a34a;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(2,132,199,0.15);
+            --glass: rgba(255, 255, 255, 0.85);
+            --input-bg: rgba(241, 245, 249, 0.8);
             --radius: 14px;
             --radius-sm: 8px;
             --radius-xs: 6px;
-            --shadow: 0 4px 24px rgba(0,0,0,0.35);
-            --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
+            --shadow: 0 4px 24px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
             --transition: 0.2s ease;
         }
 
@@ -290,7 +290,7 @@
 
         .btn-primary {
             background: var(--accent);
-            color: var(--sky-dark);
+            color: #fff;
         }
 
         .btn-primary:hover { background: var(--accent-glow); }
@@ -315,7 +315,7 @@
             color: #fff;
         }
 
-        .btn-sunset:hover { background: var(--sunset-light); color: var(--sky-dark); }
+        .btn-sunset:hover { background: var(--sunset-light); color: #fff; }
 
         /* ===== POST CARD ===== */
         .post { padding: 0; overflow: hidden; }
@@ -452,7 +452,7 @@
             padding: 10px 0;
         }
 
-        .comment + .comment { border-top: 1px solid rgba(255,255,255,0.04); }
+        .comment + .comment { border-top: 1px solid rgba(0,0,0,0.06); }
 
         .comment-avatar {
             width: 32px; height: 32px; border-radius: 50%;
@@ -533,7 +533,7 @@
             padding: 10px 0;
         }
 
-        .suggested-user + .suggested-user { border-top: 1px solid rgba(255,255,255,0.04); }
+        .suggested-user + .suggested-user { border-top: 1px solid rgba(0,0,0,0.06); }
 
         .suggested-user-avatar {
             width: 38px; height: 38px; border-radius: 50%;
@@ -559,7 +559,7 @@
 
         .follow-btn:hover {
             background: var(--accent);
-            color: var(--sky-dark);
+            color: #fff;
         }
 
         .follow-btn.following {
@@ -574,7 +574,7 @@
             cursor: pointer;
         }
 
-        .trending-item + .trending-item { border-top: 1px solid rgba(255,255,255,0.04); }
+        .trending-item + .trending-item { border-top: 1px solid rgba(0,0,0,0.06); }
 
         .trending-item:hover .trending-tag { color: var(--accent); }
 
@@ -695,7 +695,7 @@
 
         .media-grid-item .overlay {
             position: absolute; inset: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.3);
             display: flex; align-items: center; justify-content: center; gap: 16px;
             opacity: 0;
             transition: var(--transition);
@@ -765,7 +765,7 @@
             padding: 14px 16px;
             cursor: pointer;
             transition: var(--transition);
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
         .convo-item:hover { background: var(--accent-dim); }
@@ -815,7 +815,7 @@
         .chat-msg.sent {
             align-self: flex-end;
             background: var(--accent);
-            color: var(--sky-dark);
+            color: #fff;
             border-bottom-right-radius: 6px;
         }
 
@@ -977,7 +977,7 @@
         /* ===== UPLOAD MODAL ===== */
         .modal-overlay {
             position: fixed; inset: 0;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.35);
             z-index: 2000;
             display: none;
             align-items: center;
@@ -1129,7 +1129,7 @@
         }
 
         .setting-row + .setting-row {
-            border-top: 1px solid rgba(255,255,255,0.04);
+            border-top: 1px solid rgba(0,0,0,0.06);
         }
 
         .setting-info h4 { font-size: 0.9rem; margin-bottom: 2px; }
@@ -1213,9 +1213,9 @@
         .auth-bg {
             position: absolute; inset: 0;
             background:
-                radial-gradient(ellipse at 20% 50%, rgba(0,180,216,0.08) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 20%, rgba(247,127,0,0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 80%, rgba(6,214,160,0.05) 0%, transparent 50%);
+                radial-gradient(ellipse at 20% 50%, rgba(2,132,199,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(234,88,12,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(22,163,74,0.06) 0%, transparent 50%);
             pointer-events: none;
         }
 
@@ -1326,7 +1326,7 @@
 
         .auth-btn-primary {
             background: var(--accent);
-            color: var(--sky-dark);
+            color: #fff;
         }
 
         .auth-btn-primary:hover { background: var(--accent-glow); }
@@ -3013,7 +3013,7 @@ function showToast(message) {
     const toast = document.createElement('div');
     toast.style.cssText = `
         position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-        background: var(--accent); color: var(--sky-dark);
+        background: var(--accent); color: #fff;
         padding: 12px 24px; border-radius: 24px;
         font-weight: 600; font-size: 0.9rem;
         z-index: 9999; animation: fadeIn 0.3s ease;
